@@ -10,5 +10,17 @@
         "version": "2.0",
         "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/com.iplay.assistant/GG%E5%A4%A7%E7%8E%A9%E5%AE%B6_Frida_V2.0.js_enc.js",
         "desc": "GG大玩家破解补丁"
+    },
+    {
+        "author": "墨殇",
+        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Unity Dump/markdown.md",
+        "ctime": "2023年5月11日 20:13:32",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Unity Dump",
+        "id": "Unity Dump",
+        "title": "Unity Dump",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/com.iplay.assistant/Unity Dump.js",
+        "desc": "GG大玩家破解补丁"
     }
 ]
