@@ -1,0 +1,62 @@
+[
+    {
+        "author": "墨殇",
+        "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/com.iplay.assistant/README.md",
+        "ctime": "2023年5月11日 19:46:14",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/com.iplay.assistant",
+        "id": "GG大玩家Patch",
+        "title": "GG大玩家Patch",
+        "type": "Frida",
+        "version": "2.0",
+        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/com.iplay.assistant/GG%E5%A4%A7%E7%8E%A9%E5%AE%B6_Frida_V2.0.js_enc.js",
+        "desc": "GG大玩家破解补丁"
+    },
+    {
+        "author": "墨殇",
+        "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Unity Dump/README.md",
+        "ctime": "2023年5月11日 20:13:32",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Unity Dump",
+        "id": "Unity Dump",
+        "title": "Unity Dump",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/com.iplay.assistant/Unity Dump.js",
+        "desc": "Unity Dump 内存dump 获得基于Unity3d的游戏相关代码"
+    },
+    {
+        "author": "hluwa",
+        "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/FRIDA-DEXDump/README.md",
+        "ctime": "2023年5月11日 20:51:31",
+        "source": "https://github.com/hluwa/FRIDA-DEXDump",
+        "id": "FRIDA-DEXDump",
+        "title": "FRIDA-DEXDump",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/FRIDA-DEXDump/FRIDA-DEXDump.js",
+        "desc": "Dex脱壳脚本1"
+    },
+    {
+        "author": "lasting-yang",
+        "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/dump_dex/README.md",
+        "ctime": "2023年5月11日 20:51:31",
+        "source": "https://github.com/lasting-yang/frida_dump/blob/master/dump_dex.js",
+        "id": "dump_dex",
+        "title": "dump_dex",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/dump_dex/dump_dex.js",
+        "desc": "Dex脱壳脚本2"
+    },
+    {
+        "author": "JSHook",
+        "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Frida通杀java层算法/README.md",
+        "ctime": "2023年5月11日 21:15:19",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Frida通杀java层算法",
+        "id": "Frida通杀java层算法",
+        "title": "Frida通杀java层算法",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Frida通杀java层算法/Frida通杀java层算法.js",
+        "desc": "Frida通杀java层算法"
+    }
+]
