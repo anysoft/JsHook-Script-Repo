@@ -21,6 +21,6 @@
         "type": "Frida",
         "version": "1.0",
         "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/com.iplay.assistant/Unity Dump.js",
-        "desc": "GG大玩家破解补丁"
+        "desc": "Unity Dump 内存dump 获得基于Unity3d的游戏相关代码"
     }
 ]
