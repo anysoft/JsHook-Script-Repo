@@ -1,0 +1,26 @@
+[
+    {
+        "author": "墨殇",
+        "markdown": "markdown的地址",
+        "ctime": "生成时间(0000-00-00)",
+        "source": "脚本来源地址",
+        "id": "脚本唯一标识(推荐uuid)",
+        "title": "脚本名称",
+        "type": "脚本类型(rhino/frida)",
+        "version": "版本号",
+        "url": "脚本下载地址",
+        "desc": "脚本描述"
+    },
+    {
+        "author": "FlxSNX",
+        "markdown": "https://store.888718.xyz/markdown/DDDDPro",
+        "ctime": "1970-01-01",
+        "source": "https://store.888718.xyz/DDDDPro",
+        "id": "DDDDPro",
+        "title": "DDDDPro",
+        "type": "frida",
+        "version": "1.0.0",
+        "url": "https://store.888718.xyz/download/DDDDPro",
+        "desc": "DDDDPro"
+    }
+]
