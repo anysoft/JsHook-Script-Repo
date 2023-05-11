@@ -22,5 +22,29 @@
         "version": "1.0",
         "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/com.iplay.assistant/Unity Dump.js",
         "desc": "Unity Dump 内存dump 获得基于Unity3d的游戏相关代码"
+    },
+    {
+        "author": "hluwa",
+        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/README.md",
+        "ctime": "2023年5月11日 20:51:31",
+        "source": "https://github.com/hluwa/FRIDA-DEXDump",
+        "id": "FRIDA-DEXDump",
+        "title": "FRIDA-DEXDump",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/FRIDA-DEXDump.js",
+        "desc": "Dex脱壳脚本1"
+    },
+    {
+        "author": "lasting-yang",
+        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/README.md",
+        "ctime": "2023年5月11日 20:51:31",
+        "source": "https://github.com/lasting-yang/frida_dump/blob/master/dump_dex.js",
+        "id": "dump_dex",
+        "title": "dump_dex",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/dump_dex.js",
+        "desc": "Dex脱壳脚本2"
     }
 ]
