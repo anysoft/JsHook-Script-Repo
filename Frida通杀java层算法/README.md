@@ -1,0 +1,2 @@
+Frida通杀java层算法
+由原JSHook仓库备份而来

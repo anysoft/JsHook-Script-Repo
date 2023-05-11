@@ -46,5 +46,17 @@
         "version": "1.0",
         "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/dump_dex.js",
         "desc": "Dex脱壳脚本2"
+    },
+    {
+        "author": "JSHook",
+        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/README.md",
+        "ctime": "2023年5月11日 21:15:19",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Frida通杀java层算法",
+        "id": "Frida通杀java层算法",
+        "title": "Frida通杀java层算法",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/Frida通杀java层算法.js",
+        "desc": "Frida通杀java层算法"
     }
 ]
