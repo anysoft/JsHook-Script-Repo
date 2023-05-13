@@ -20,7 +20,7 @@
         "title": "Unity Dump",
         "type": "Frida",
         "version": "1.0",
-        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/com.iplay.assistant/Unity Dump.js",
+        "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Unity Dump/Unity Dump.js",
         "desc": "Unity Dump 内存dump 获得基于Unity3d的游戏相关代码"
     },
     {
