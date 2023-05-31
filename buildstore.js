@@ -52,8 +52,8 @@ function fileDisplay(filePath) {
                                 var content = fs.readFileSync(filedir, 'utf-8');
                                 // console.log(content);
 
-                                let author = content.match(/# 作者\s+@(.*?)$/igm)
-                                console.log(author + '123');
+                                let author = content.match(/# 作者\s+@(.+)[^.]/igm)
+                                console.log(author);
                                 let store = {
                                     "author": "墨殇",
                                     "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/GG大玩家Patch/README.md",
