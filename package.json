@@ -1,5 +1,5 @@
 {
     "scripts": {
-        "build": "node buildstore.js"
+        "buildstore": "node buildstore.js"
     }
 }
