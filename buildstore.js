@@ -27,8 +27,8 @@ var path = 'Store.json';
 if (fs.existsSync(path)) {
     console.log('-正在读取文件: ', path);
     let data = fs.readFileSync(path, 'utf-8');
-    data = data.replaceAll('https://raw.githubusercontent.com/', 'https://cdn.jsdelivr.net/gh/');
-    data = data.replaceAll('/main/', '/');
+    data = data.replaceAll('https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/', 'https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/');
+    // data = data.replaceAll('/main/', '/');
     console.log(data);
     fs.writeFileSync(path + '-cdn.json', data);
 
