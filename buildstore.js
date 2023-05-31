@@ -25,12 +25,13 @@ store = {
 const fs = require('fs');
 var path = 'Store.json';
 if (fs.existsSync(path)) {
-    console.log('-正在读取文件: ', path);
+    console.log('start read file:', path);
     let data = fs.readFileSync(path, 'utf-8');
     data = data.replaceAll('https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/', 'https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/');
     // data = data.replaceAll('/main/', '/');
-    console.log(data);
-    fs.writeFileSync(path + '-cdn.json', data);
+    // console.log(data);
+    fs.writeFileSync('Store-cdn.json', data);
+    console.log('Success!');
 
     // let zz = data.match(/:\/\/raw.githubusercontent.com\/(.*?)\/(.*?)\/main\/(.*?)\/(.*?)\"/ig);
     // zz.forEach(element => {
