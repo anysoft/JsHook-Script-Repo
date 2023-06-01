@@ -42,7 +42,7 @@ function main() {
             // console.log(mtime);
             let store = {
                 "author": author,
-                "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name + "/'README.md",
+                "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name + "/README.md",
                 "ctime": mtime,
                 "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name,
                 "id": name,
@@ -55,7 +55,7 @@ function main() {
             stores.push(store);
             let store_cdn = {
                 "author": author,
-                "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/" + name + "/'README.md",
+                "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/" + name + "/README.md",
                 "ctime": mtime,
                 "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name,
                 "id": name,
