@@ -2,7 +2,7 @@
     {
         "id": "9",
         "title": "庆祝新版仓库",
-        "args": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Msg/msg.markdown",
+        "args": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Msg/msg.markdown",
         "action": "markdown"
     }
 ]
