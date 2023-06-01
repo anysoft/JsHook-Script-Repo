@@ -23,6 +23,7 @@ function main() {
             let scriptTypeRegex = /^# 脚本类型\s+(.*)$/m;
             let authorRegex = /^# 作者\s+@(.*)$/m; // 匹配以 "#作者" 开头，后面跟着至少一个空格和 "@" 符号的行，并获取该行后面所有文本。
             // let descriptionRegex = /# 描述\s+([\s\S]*?)\s+# /; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
+
             let descriptionRegex = /# 描述\s+([\s\S]*?)$/m; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
             let nameMatch = content.match(nameRegex); // 使用正则表达式从文本中获取名称。
             let versionMatch = content.match(versiongex);
@@ -42,7 +43,7 @@ function main() {
             // console.log(mtime);
             let store = {
                 "author": author,
-                "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name + "/README.md",
+                "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/" + name + "/README.md",
                 "ctime": mtime,
                 "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name,
                 "id": name,
@@ -119,6 +120,4 @@ function getAllFiles(filePath) {
 //     //     console.log(user, repo, name, file)
 //     // });
 // };
-
-
 // console.log(store);
