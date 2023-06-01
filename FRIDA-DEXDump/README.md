@@ -1,5 +1,7 @@
 # 名称
 FRIDA-DEXDump
+# 脚本类型
+Frida
 # 描述
 Initially Created By Hluwa
 https://github.com/hluwa/FRIDA-DEXDump

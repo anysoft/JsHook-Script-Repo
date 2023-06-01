@@ -1,5 +1,7 @@
 # 名称
 GG大玩家Patch
+# 脚本类型
+Frida
 # 描述
 GG大玩家Patch
 
