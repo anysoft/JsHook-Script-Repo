@@ -41,29 +41,30 @@ function main() {
             // console.log(filepatn);
             let mtime = fs.statSync(filepatn + scriptType + ".js").mtime.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
             // console.log(mtime);
+            let branch = "main"; // master
             let store = {
                 "author": author,
-                "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Scripts/" + name + "/README.md",
+                "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/" + branch + "/Scripts/" + name + "/README.md",
                 "ctime": mtime,
-                "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Scripts/" + name,
+                "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/" + branch + "/Scripts/" + name,
                 "id": name,
                 "title": name,
                 "type": scriptType,
                 "version": version,
-                "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Scripts/" + name + "/" + scriptType + ".js",
+                "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/" + branch + "/Scripts/" + name + "/" + scriptType + ".js",
                 "desc": description
             };
             stores.push(store);
             let store_cdn = {
                 "author": author,
-                "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Scripts/" + name + "/README.md",
+                "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo@" + branch + "/Scripts/" + name + "/README.md",
                 "ctime": mtime,
-                "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Scripts/" + name,
+                "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/" + branch + "/Scripts/" + name,
                 "id": name,
                 "title": name,
                 "type": scriptType,
                 "version": version,
-                "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Scripts/" + name + "/" + scriptType + ".js",
+                "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo@" + branch + "/Scripts/" + name + "/" + scriptType + ".js",
                 "desc": description
             };
             stores_cdn.push(store_cdn);
