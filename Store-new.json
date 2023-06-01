@@ -1,8 +1,8 @@
 {
     "name": "test",
     "icon": null,
-    "list": "https://jsonet.cdnipcs.com/test2.json", 
-"push": "https://jsonet.cdnipcs.com/test3.json",
+    "list": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Store.json",
+    "push": "https://jsonet.cdnipcs.com/test3.json",
     "markdown": "https://jsonet.cdnipcs.com/test.markdown",
     "group_qq": null,
     "group_tg": "jshookgroup",
