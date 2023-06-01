@@ -9,6 +9,7 @@ const path = require('path');
 main()
 function main() {
     const stores = [];
+    const stores_cdn = [];
     let allFiles = getAllFiles('.');
     console.log(`文件数量:${allFiles.length}`);
     for (let i = 0; i < allFiles.length; i++) {
@@ -50,15 +51,25 @@ function main() {
                 "version": version,
                 "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/" + name + "/" + scriptType + ".js",
                 "desc": description
-            }
-            // console.log(JSON.stringify(store));
+            };
             stores.push(store);
+            let store_cdn = {
+                "author": author,
+                "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/" + name + "/'README.md",
+                "ctime": mtime,
+                "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name,
+                "id": name,
+                "title": name,
+                "type": scriptType,
+                "version": version,
+                "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/" + name + "/" + scriptType + ".js",
+                "desc": description
+            };
+            stores_cdn.push(store_cdn);
         }
-
-        // let content = fs.readFileSync(allFiles[i]).toString();
-        // console.log(content);
     }
-    fs.writeFileSync('test.json', JSON.stringify(stores));
+    fs.writeFileSync('Store.json', JSON.stringify(stores));
+    fs.writeFileSync('Store-cdn.json', JSON.stringify(stores_cdn));
     //console.log(stores);
 
 }

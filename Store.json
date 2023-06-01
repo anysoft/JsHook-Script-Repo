@@ -1,8 +1,44 @@
 [
     {
+        "author": "lasting-yang",
+        "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/dump_dex/'README.md",
+        "ctime": "2022/11/8 01:10:56",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/dump_dex",
+        "id": "dump_dex",
+        "title": "dump_dex",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/Frida.js",
+        "desc": "Dex脱壳脚本2"
+    },
+    {
+        "author": "hluwa",
+        "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/FRIDA-DEXDump/'README.md",
+        "ctime": "2022/10/28 12:08:46",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/FRIDA-DEXDump",
+        "id": "FRIDA-DEXDump",
+        "title": "FRIDA-DEXDump",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/Frida.js",
+        "desc": "Dex脱壳脚本1"
+    },
+    {
+        "author": "JSHook",
+        "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Frida通杀java层算法/'README.md",
+        "ctime": "2022/6/27 17:08:56",
+        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Frida通杀java层算法",
+        "id": "Frida通杀java层算法",
+        "title": "Frida通杀java层算法",
+        "type": "Frida",
+        "version": "1.0",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/Frida.js",
+        "desc": "Frida通杀java层算法"
+    },
+    {
         "author": "墨殇",
-        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/GG大玩家Patch/README.md",
-        "ctime": "2023年5月11日 19:46:14",
+        "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/GG大玩家Patch/'README.md",
+        "ctime": "2023/5/31 18:20:29",
         "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/GG大玩家Patch",
         "id": "GG大玩家Patch",
         "title": "GG大玩家Patch",
@@ -13,8 +49,8 @@
     },
     {
         "author": "墨殇",
-        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Unity Dump/README.md",
-        "ctime": "2023年5月11日 20:13:32",
+        "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Unity Dump/'README.md",
+        "ctime": "2023/5/11 20:11:33",
         "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Unity Dump",
         "id": "Unity Dump",
         "title": "Unity Dump",
@@ -22,41 +58,5 @@
         "version": "1.0",
         "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Unity Dump/Frida.js",
         "desc": "Unity Dump 内存dump 获得基于Unity3d的游戏相关代码"
-    },
-    {
-        "author": "hluwa",
-        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/README.md",
-        "ctime": "2023年5月11日 20:51:31",
-        "source": "https://github.com/hluwa/FRIDA-DEXDump",
-        "id": "FRIDA-DEXDump",
-        "title": "FRIDA-DEXDump",
-        "type": "Frida",
-        "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/Frida.js",
-        "desc": "Dex脱壳脚本1"
-    },
-    {
-        "author": "lasting-yang",
-        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/README.md",
-        "ctime": "2023年5月11日 20:51:31",
-        "source": "https://github.com/lasting-yang/frida_dump/blob/master/dump_dex.js",
-        "id": "dump_dex",
-        "title": "dump_dex",
-        "type": "Frida",
-        "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/Frida.js",
-        "desc": "Dex脱壳脚本2"
-    },
-    {
-        "author": "JSHook",
-        "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/README.md",
-        "ctime": "2023年5月11日 21:15:19",
-        "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/Frida通杀java层算法",
-        "id": "Frida通杀java层算法",
-        "title": "Frida通杀java层算法",
-        "type": "Frida",
-        "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/Frida.js",
-        "desc": "Frida通杀java层算法"
     }
 ]
