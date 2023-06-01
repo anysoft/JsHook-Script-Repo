@@ -2,7 +2,7 @@
     "name": "test",
     "icon": null,
     "list": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Store.json",
-    "push": "https://jsonet.cdnipcs.com/test3.json",
+    "push": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/msg/msg.json",
     "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/README.md",
     "group_qq": null,
     "group_tg": "jshookgroup",
