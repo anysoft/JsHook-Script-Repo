@@ -8,7 +8,7 @@
         "title": "GG大玩家Patch",
         "type": "Frida",
         "version": "2.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/GG大玩家Patch/GG大玩家_Frida_V2.0.js_enc.js",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/GG大玩家Patch/Frida.js",
         "desc": "GG大玩家破解补丁"
     },
     {
@@ -20,7 +20,7 @@
         "title": "Unity Dump",
         "type": "Frida",
         "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Unity Dump/Unity Dump.js",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Unity Dump/Frida.js",
         "desc": "Unity Dump 内存dump 获得基于Unity3d的游戏相关代码"
     },
     {
@@ -32,7 +32,7 @@
         "title": "FRIDA-DEXDump",
         "type": "Frida",
         "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/FRIDA-DEXDump.js",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/FRIDA-DEXDump/Frida.js",
         "desc": "Dex脱壳脚本1"
     },
     {
@@ -44,7 +44,7 @@
         "title": "dump_dex",
         "type": "Frida",
         "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/dump_dex.js",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/dump_dex/Frida.js",
         "desc": "Dex脱壳脚本2"
     },
     {
@@ -56,7 +56,7 @@
         "title": "Frida通杀java层算法",
         "type": "Frida",
         "version": "1.0",
-        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/Frida通杀java层算法.js",
+        "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/Frida.js",
         "desc": "Frida通杀java层算法"
     }
 ]
