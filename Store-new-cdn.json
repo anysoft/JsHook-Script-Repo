@@ -2,7 +2,7 @@
     "name": "test",
     "icon": null,
     "list": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Store-cdn.json",
-    "push": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/msg/Msg-cdn.json",
+    "push": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/Msg/msg-cdn.json",
     "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/README.md",
     "group_qq": null,
     "group_tg": "jshookgroup",
