@@ -58,37 +58,5 @@
         "version": "1.0",
         "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/Frida通杀java层算法/Frida通杀java层算法.js",
         "desc": "Frida通杀java层算法"
-    },
-    {
-        "name": "test",
-        "icon": null,
-        "list": "https://jsonet.cdnipcs.com/test2.json", // 脚本详细信息
-        /* [
-    {
-        "author": "作者名称",
-        "markdown": "https://jsonet.cdnipcs.com/test.markdown",
-        "ctime": "生成时间(0000-00-00)",
-        "source": "脚本来源地址",
-        "id": "脚本唯一标识(推荐uuid)",
-        "title": "脚本名称",
-        "type": "脚本类型(rhino/frida)",
-        "version": "版本号",
-        "url": "https://jsonet.cdnipcs.com/test.markdown",
-        "desc": "脚本描述"
-    }
-] */
-        "push": "https://jsonet.cdnipcs.com/test3.json",
-        /* [
-    {
-        "id": "9",
-        "title": "ccccc",
-        "args": "https://jsonet.cdnipcs.com/test.markdown",
-        "action": "markdown"
-    }
-] */
-        "markdown": "https://jsonet.cdnipcs.com/test.markdown",
-        "group_qq": null,
-        "group_tg": "jshookgroup",
-        "user_count": 123
     }
 ]
