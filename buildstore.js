@@ -10,7 +10,7 @@ main()
 function main() {
     const stores = [];
     const stores_cdn = [];
-    let allFiles = getAllFiles('./Scripts');
+    let allFiles = getAllFiles('./Scripts/');
     console.log(`文件数量:${allFiles.length}`);
     for (let i = 0; i < allFiles.length; i++) {
         // console.log(allFiles[i]);
@@ -23,8 +23,8 @@ function main() {
             let scriptTypeRegex = /^# 脚本类型\s+(.*)$/m;
             let authorRegex = /^# 作者\s+@(.*)$/m; // 匹配以 "#作者" 开头，后面跟着至少一个空格和 "@" 符号的行，并获取该行后面所有文本。
             // let descriptionRegex = /# 描述\s+([\s\S]*?)\s+# /; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
-
             let descriptionRegex = /# 描述\s+([\s\S]*?)$/m; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
+
             let nameMatch = content.match(nameRegex); // 使用正则表达式从文本中获取名称。
             let versionMatch = content.match(versiongex);
             let scriptTypeMatch = content.match(scriptTypeRegex); // 使用正则表达式从文本中获取脚本类型。
@@ -36,9 +36,9 @@ function main() {
             let scriptType = scriptTypeMatch && scriptTypeMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
             let author = authorMatch && authorMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
             let description = descriptionMatch && descriptionMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
-            // console.log(`名称: ${name}\nVersion: ${name}\n脚本类型: ${scriptType}\n作者: ${author}\n描述: ${description}`);
+            console.log(`名称: ${name} | Version: ${version} | 脚本类型: ${scriptType} | 作者: ${author} | 描述: ${description}`);
             let filepatn = allFiles[i].substring(0, allFiles[i].length - 'README.md'.length);
-            console.log(filepatn);
+            // console.log(filepatn);
             let mtime = fs.statSync(filepatn + scriptType + ".js").mtime.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
             // console.log(mtime);
             let store = {
