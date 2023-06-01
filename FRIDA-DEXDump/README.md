@@ -5,6 +5,7 @@ FRIDA-DEXDump
 # 脚本类型
 Frida
 # 描述
+Dex脱壳脚本1
 Initially Created By Hluwa
 https://github.com/hluwa/FRIDA-DEXDump
 Modified By @ApkUnpacker to use as standalone js script 

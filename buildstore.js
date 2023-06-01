@@ -1,122 +1,91 @@
-let store = {
-    "author": "墨殇",
-    "markdown": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/com.iplay.assistant/README.md",
-    "ctime": "2023年5月11日 19:46:14",
-    "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/com.iplay.assistant",
-    "id": "GG大玩家Patch",
-    "title": "GG大玩家Patch",
-    "type": "Frida",
-    "version": "2.0",
-    "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo/com.iplay.assistant/GG大玩家_Frida_V2.0.js_enc.js",
-    "desc": "GG大玩家破解补丁"
-};
-store = {
-    "author": "墨殇",
-    "markdown": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/GG大玩家Patch/README.md",
-    "ctime": "2023年5月11日 19:46:14",
-    "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/GG大玩家Patch",
-    "id": "GG大玩家Patch",
-    "title": "GG大玩家Patch",
-    "type": "Frida",
-    "version": "2.0",
-    "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/GG大玩家Patch/GG大玩家_Frida_V2.0.js_enc.js",
-    "desc": "GG大玩家破解补丁"
-}
 const fs = require('fs');
 const path = require('path');
-var filePath = path.resolve('.');
+//var filePath = path.resolve('.');
 //调用文件遍历方法
-var stores = [];
-var iii = 0;
-fileDisplay(filePath)(
-    ()=>{
-        console.log(stores)
-    }
-)
 
 //文件遍历方法
+// fileDisplay(filePath);
 
+main()
+function main() {
+    const stores = [];
+    let allFiles = getAllFiles('.');
+    console.log(`文件数量:${allFiles.length}`);
+    for (let i = 0; i < allFiles.length; i++) {
+        // console.log(allFiles[i]);
+        // 同步读取文件内容
+        if (allFiles[i].indexOf("README.md") >= 0 && allFiles[i] != "./README.md") {
+            console.log(allFiles[i]);// 读取文件内容
+            let content = fs.readFileSync(allFiles[i], 'utf-8');
+            let nameRegex = /^# 名称\s+(.*)$/m; // 匹配以 "#名称" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
+            let versiongex = /^# Version\s+(.*)$/m;
+            let scriptTypeRegex = /^# 脚本类型\s+(.*)$/m;
+            let authorRegex = /^# 作者\s+@(.*)$/m; // 匹配以 "#作者" 开头，后面跟着至少一个空格和 "@" 符号的行，并获取该行后面所有文本。
+            // let descriptionRegex = /# 描述\s+([\s\S]*?)\s+# /; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
+            let descriptionRegex = /# 描述\s+([\s\S]*?)$/m; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
+            let nameMatch = content.match(nameRegex); // 使用正则表达式从文本中获取名称。
+            let versionMatch = content.match(versiongex);
+            let scriptTypeMatch = content.match(scriptTypeRegex); // 使用正则表达式从文本中获取脚本类型。
+            let authorMatch = content.match(authorRegex); // 使用正则表达式从文本中获取作者。
+            let descriptionMatch = content.match(descriptionRegex); // 使用正则表达式从文本中获取描述。
 
-const ret = [];
-fileDisplay(filePath);
- function fileDisplay(filePath) {
-    //根据文件路径读取文件，返回文件列表
-    fs.readdir(filePath, function (err, files) {
-        if (err) {
-            console.warn(err)
-        } else {
-            //遍历读取到的文件列表
-            files.forEach(function (filename) {
-                //获取当前文件的绝对路径
-                var filedir = path.join(filePath, filename);
-                //根据文件路径获取文件信息，返回一个fs.Stats对象
-                fs.stat(filedir, function (eror, stats) {
-                    if (eror) {
-                        console.warn('获取文件stats失败');
-                    } else {
-                        var isFile = stats.isFile();//是文件
-                        var isDir = stats.isDirectory();//是文件夹
-                        if (isFile) {
-                            if (filedir.indexOf('README.md') >= 0 && filedir.indexOf('\\JsHook-Script-Repo\\README.md') < 0) {
-                                console.log(filedir);// 读取文件内容
-                                let content = fs.readFileSync(filedir, 'utf-8');
-                                const nameRegex = /^# 名称\s+(.*)$/m; // 匹配以 "#名称" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
-                                const versiongex = /^# Version\s+(.*)$/m;
-                                const scriptTypeRegex = /^# 脚本类型\s+(.*)$/m;
-                                const authorRegex = /^# 作者\s+@(.*)$/m; // 匹配以 "#作者" 开头，后面跟着至少一个空格和 "@" 符号的行，并获取该行后面所有文本。
-                                const descriptionRegex = /# 描述\s+([\s\S]*?)\s+# /; // 匹配以 "#描述" 开头，后面跟着至少一个空格的行，并获取该行后面所有文本。
-
-                                const nameMatch = content.match(nameRegex); // 使用正则表达式从文本中获取名称。
-                                const versionMatch = content.match(versiongex);
-                                const scriptTypeMatch = content.match(scriptTypeRegex); // 使用正则表达式从文本中获取脚本类型。
-                                const authorMatch = content.match(authorRegex); // 使用正则表达式从文本中获取作者。
-                                const descriptionMatch = content.match(descriptionRegex); // 使用正则表达式从文本中获取描述。
-
-                                const name = nameMatch && nameMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
-                                const version = versionMatch && versionMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
-                                const scriptType = scriptTypeMatch && scriptTypeMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
-                                const author = authorMatch && authorMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
-                                const description = descriptionMatch && descriptionMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
-                                // console.log(`名称: ${name}\nVersion: ${name}\n脚本类型: ${scriptType}\n作者: ${author}\n描述: ${description}`);
-                                const filepatn = filedir.substring(0, filedir.length - 'README.md'.length);
-                                const mtime = fs.statSync(filepatn + scriptType + ".js").mtime.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
-                                // console.log(mtime);
-
-                                const store = {
-                                    "author": author,
-                                    "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name + "/'README.md",
-                                    "ctime": mtime,
-                                    "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name,
-                                    "id": name,
-                                    "title": name,
-                                    "type": scriptType,
-                                    "version": version,
-                                    "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/" + name + "/" + scriptType + ".js",
-                                    "desc": description
-                                }
-                                // console.log(JSON.stringify(store));
-
-                                stores.push(store);
-
-                            }
-
-                        }
-                        if (isDir) {
-                            fileDisplay(filedir);//递归，如果是文件夹，就继续遍历该文件夹下面的文件
-                        }
-                    }
-                })
-            });
+            let name = nameMatch && nameMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
+            let version = versionMatch && versionMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
+            let scriptType = scriptTypeMatch && scriptTypeMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
+            let author = authorMatch && authorMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
+            let description = descriptionMatch && descriptionMatch[1]; // 如果找到了匹配项，则获取第一项（分组捕获的内容）。
+            // console.log(`名称: ${name}\nVersion: ${name}\n脚本类型: ${scriptType}\n作者: ${author}\n描述: ${description}`);
+            let filepatn = allFiles[i].substring(0, allFiles[i].length - 'README.md'.length);
+            console.log(filepatn);
+            let mtime = fs.statSync(filepatn + scriptType + ".js").mtime.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
+            // console.log(mtime);
+            let store = {
+                "author": author,
+                "markdown": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name + "/'README.md",
+                "ctime": mtime,
+                "source": "https://github.com/bcmdy/JsHook-Script-Repo/tree/main/" + name,
+                "id": name,
+                "title": name,
+                "type": scriptType,
+                "version": version,
+                "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/main/" + name + "/" + scriptType + ".js",
+                "desc": description
+            }
+            // console.log(JSON.stringify(store));
+            stores.push(store);
         }
-    });
-    //fs.writeFileSync('test.json', JSON.stringify(ret));
+
+        // let content = fs.readFileSync(allFiles[i]).toString();
+        // console.log(content);
+    }
+    fs.writeFileSync('test.json', JSON.stringify(stores));
+    //console.log(stores);
+
 }
 
+/**
+ * 递归遍历，获取指定文件夹下面的所有文件路径
+ */
+function getAllFiles(filePath) {
+    let allFilePaths = [];
+    if (fs.existsSync(filePath)) {
+        let files = fs.readdirSync(filePath);
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i]; // 文件名称（不包含文件路径）
+            let currentFilePath = filePath + '/' + file;
+            let stats = fs.lstatSync(currentFilePath);
+            if (stats.isDirectory()) {
+                allFilePaths = allFilePaths.concat(getAllFiles(currentFilePath));
+            } else {
+                allFilePaths.push(currentFilePath);
+            }
+        }
+    } else {
+        console.warn(`指定的目录${filePath}不存在！`);
+    }
 
-// console.log(files);
-
-
-
+    return allFilePaths;
+}
 
 // var url = 'Store.json';
 // if (fs.existsSync(url)) {

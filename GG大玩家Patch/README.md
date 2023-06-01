@@ -5,7 +5,7 @@ GG大玩家Patch
 # 脚本类型
 Frida
 # 描述
-GG大玩家Patch
+GG大玩家破解补丁
 
 - 免登陆
 - 免启动广告
