@@ -1,5 +1,7 @@
 # 名称
 FRIDA-DEXDump
+# Version
+1.0
 # 脚本类型
 Frida
 # 描述
