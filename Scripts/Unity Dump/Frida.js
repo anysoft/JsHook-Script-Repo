@@ -17,12 +17,8 @@ setImmediate(e.start);
 
 function e() {
   Il2Cpp.perform((() => {
-    try {
-      console.log("unity version:" + Il2Cpp.unityVersion), console.log("dump start"), 
-      Il2Cpp.dump("dump.cs", "data/user/0/" + runtime.packageName);
-    } catch (e) {
-      console.log(e);
-    }
+    console.log("Unity Version: " + Il2Cpp.unityVersion), console.log("dump Start"), 
+    Il2Cpp.dump("dump.cs", "data/user/0/" + runtime.packageName), console.log("Dump End");
   }));
 }
 
@@ -34,19 +30,19 @@ Object.defineProperty(exports, "__esModule", {
 (function (setImmediate){(function (){
 "use strict";
 
-var e, t, n = this && this.__decorate || function(e, t, n, i) {
-  var r, s = arguments.length, a = s < 3 ? t : null === i ? i = Object.getOwnPropertyDescriptor(t, n) : i;
-  if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) a = Reflect.decorate(e, t, n, i); else for (var l = e.length - 1; l >= 0; l--) (r = e[l]) && (a = (s < 3 ? r(a) : s > 3 ? r(t, n, a) : r(t, n)) || a);
+var e, t, n = this && this.__decorate || function(e, t, n, r) {
+  var i, s = arguments.length, a = s < 3 ? t : null === r ? r = Object.getOwnPropertyDescriptor(t, n) : r;
+  if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) a = Reflect.decorate(e, t, n, r); else for (var o = e.length - 1; o >= 0; o--) (i = e[o]) && (a = (s < 3 ? i(a) : s > 3 ? i(t, n, a) : i(t, n)) || a);
   return s > 3 && a && Object.defineProperty(t, n, a), a;
 };
 
-function i(e) {
+function r(e) {
   const t = new Error(`[0m${e}`);
   throw t.name = "[0m[38;5;9mil2cpp[0m", t.stack = t.stack?.replace("Error", t.name)?.replace(/\n    at (.+) \((.+):(.+)\)/, "[3m[2m")?.concat("[0m"), 
   t;
 }
 
-function r(e) {
+function i(e) {
   globalThis.console.log(`[38;5;11mil2cpp[0m: ${e}`);
 }
 
@@ -58,8 +54,8 @@ function a(e) {
   globalThis.console.log(`[38;5;12mil2cpp[0m: ${e}`);
 }
 
-function l(e, t, n, i) {
-  globalThis.Object.defineProperty(e, t, i?.(e, t, {
+function o(e, t, n, r) {
+  globalThis.Object.defineProperty(e, t, r?.(e, t, {
     get: n,
     configurable: !0
   }) ?? {
@@ -67,11 +63,11 @@ function l(e, t, n, i) {
   });
 }
 
-function o(e, t, n) {
-  const i = n.get;
-  if (!i) throw new Error("@lazy can only be applied to getter accessors");
+function l(e, t, n) {
+  const r = n.get;
+  if (!r) throw new Error("@lazy can only be applied to getter accessors");
   return n.get = function() {
-    const e = i.call(this);
+    const e = r.call(this);
     return Object.defineProperty(this, t, {
       value: e,
       configurable: n.configurable,
@@ -92,15 +88,12 @@ class c {
   isNull() {
     return this.handle.isNull();
   }
-}
-
-class p extends c {
-  constructor(e) {
-    if (super(e), e.isNull()) throw new Error(`Handle for "${this.constructor.name}" cannot be NULL.`);
+  asNullable() {
+    return this.isNull() ? null : this;
   }
 }
 
-class u {
+class p {
   stringEncoding;
   address;
   constructor(e, t, n) {
@@ -124,7 +117,7 @@ class u {
         return [ "kernel32.dll", [ `${t}W`, "utf16" ], [ `${t}ExW`, "utf16" ], [ `${t}A`, "ansi" ], [ `${t}ExA`, "ansi" ] ];
       }
     }();
-    return n.map((([e, n]) => new u(t, e, n))).filter((e => !e.address.isNull()));
+    return n.map((([e, n]) => new p(t, e, n))).filter((e => !e.address.isNull()));
   }
   readString(e) {
     switch (this.stringEncoding) {
@@ -140,39 +133,39 @@ class u {
   }
 }
 
-function d(...e) {
+function u(...e) {
   return new Promise((t => {
     for (const n of e) {
       if (null != Process.findModuleByName(n)) return void t(n);
     }
-    const n = u.targets.map((i => Interceptor.attach(i.address, {
+    const n = p.targets.map((r => Interceptor.attach(r.address, {
       onEnter(e) {
-        this.modulePath = i.readString(e[0]) ?? "";
+        this.modulePath = r.readString(e[0]) ?? "";
       },
-      onLeave(i) {
-        if (!i.isNull()) for (const i of e) this.modulePath.endsWith(i) && (setImmediate((() => n.forEach((e => e.detach())))), 
-        t(i));
+      onLeave(r) {
+        if (!r.isNull()) for (const r of e) this.modulePath.endsWith(r) && (setImmediate((() => n.forEach((e => e.detach())))), 
+        t(r));
       }
     })));
   }));
 }
 
-function h(e) {
+function d(e) {
   const t = [], n = Memory.alloc(Process.pointerSize);
-  let i = e(n);
-  for (;!i.isNull(); ) t.push(i), i = e(n);
+  let r = e(n);
+  for (;!r.isNull(); ) t.push(r), r = e(n);
   return t;
 }
 
-function _(e) {
+function m(e) {
   const t = Memory.alloc(Process.pointerSize), n = e(t);
   if (n.isNull()) return [];
-  const i = new Array(t.readInt());
-  for (let e = 0; e < i.length; e++) i[e] = n.add(e * Process.pointerSize).readPointer();
-  return i;
+  const r = new Array(t.readInt());
+  for (let e = 0; e < r.length; e++) r[e] = n.add(e * Process.pointerSize).readPointer();
+  return r;
 }
 
-function m(e) {
+function h(e) {
   return new Proxy(e, {
     cache: new Map,
     construct(e, t) {
@@ -182,12 +175,21 @@ function m(e) {
   });
 }
 
-!function(e) {
+function y(e, t, n = Object.getOwnPropertyDescriptors(e)) {
+  for (const r in n) n[r] = t(e, r, n[r]);
+  return Object.defineProperties(e, n), e;
+}
+
+NativePointer.prototype.offsetOf = function(e, t) {
+  t || (t = 512);
+  for (let n = 0; n < t; n++) if (e(this.add(n))) return n;
+  return null;
+}, function(e) {
   const t = /(20\d{2}|\d)\.(\d)\.(\d{1,2})(?:[abcfp]|rc){0,2}\d?/;
   function n(e, n) {
-    const i = e.match(t), r = n.match(t);
+    const r = e.match(t), i = n.match(t);
     for (let e = 1; e <= 3; e++) {
-      const t = Number(i?.[e] ?? -1), n = Number(r?.[e] ?? -1);
+      const t = Number(r?.[e] ?? -1), n = Number(i?.[e] ?? -1);
       if (t > n) return 1;
       if (t < n) return -1;
     }
@@ -201,540 +203,418 @@ function m(e) {
     return n(e, t) < 0;
   };
 }(e || (e = {})), function(e) {
-  class t {
-    constructor() {}
-    static get alloc() {
-      return this.r("il2cpp_alloc", "pointer", [ "size_t" ]);
-    }
-    static get arrayGetElements() {
-      return this.r("il2cpp_array_get_elements", "pointer", [ "pointer" ]);
-    }
-    static get arrayGetLength() {
-      return this.r("il2cpp_array_length", "uint32", [ "pointer" ]);
-    }
-    static get arrayNew() {
-      return this.r("il2cpp_array_new", "pointer", [ "pointer", "uint32" ]);
-    }
-    static get assemblyGetImage() {
-      return this.r("il2cpp_assembly_get_image", "pointer", [ "pointer" ]);
-    }
-    static get classForEach() {
-      return this.r("il2cpp_class_for_each", "void", [ "pointer", "pointer" ]);
-    }
-    static get classFromName() {
-      return this.r("il2cpp_class_from_name", "pointer", [ "pointer", "pointer", "pointer" ]);
-    }
-    static get classFromSystemType() {
-      return this.r("il2cpp_class_from_system_type", "pointer", [ "pointer" ]);
-    }
-    static get classFromType() {
-      return this.r("il2cpp_class_from_type", "pointer", [ "pointer" ]);
-    }
-    static get classGetActualInstanceSize() {
-      return this.r("il2cpp_class_get_actual_instance_size", "int32", [ "pointer" ]);
-    }
-    static get classGetArrayClass() {
-      return this.r("il2cpp_array_class_get", "pointer", [ "pointer", "uint32" ]);
-    }
-    static get classGetArrayElementSize() {
-      return this.r("il2cpp_class_array_element_size", "int", [ "pointer" ]);
-    }
-    static get classGetAssemblyName() {
-      return this.r("il2cpp_class_get_assemblyname", "pointer", [ "pointer" ]);
-    }
-    static get classGetBaseType() {
-      return this.r("il2cpp_class_enum_basetype", "pointer", [ "pointer" ]);
-    }
-    static get classGetDeclaringType() {
-      return this.r("il2cpp_class_get_declaring_type", "pointer", [ "pointer" ]);
-    }
-    static get classGetElementClass() {
-      return this.r("il2cpp_class_get_element_class", "pointer", [ "pointer" ]);
-    }
-    static get classGetFieldFromName() {
-      return this.r("il2cpp_class_get_field_from_name", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get classGetFields() {
-      return this.r("il2cpp_class_get_fields", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get classGetFlags() {
-      return this.r("il2cpp_class_get_flags", "int", [ "pointer" ]);
-    }
-    static get classGetImage() {
-      return this.r("il2cpp_class_get_image", "pointer", [ "pointer" ]);
-    }
-    static get classGetInstanceSize() {
-      return this.r("il2cpp_class_instance_size", "int32", [ "pointer" ]);
-    }
-    static get classGetInterfaces() {
-      return this.r("il2cpp_class_get_interfaces", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get classGetMethodFromName() {
-      return this.r("il2cpp_class_get_method_from_name", "pointer", [ "pointer", "pointer", "int" ]);
-    }
-    static get classGetMethods() {
-      return this.r("il2cpp_class_get_methods", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get classGetName() {
-      return this.r("il2cpp_class_get_name", "pointer", [ "pointer" ]);
-    }
-    static get classGetNamespace() {
-      return this.r("il2cpp_class_get_namespace", "pointer", [ "pointer" ]);
-    }
-    static get classGetNestedClasses() {
-      return this.r("il2cpp_class_get_nested_types", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get classGetParent() {
-      return this.r("il2cpp_class_get_parent", "pointer", [ "pointer" ]);
-    }
-    static get classGetRank() {
-      return this.r("il2cpp_class_get_rank", "int", [ "pointer" ]);
-    }
-    static get classGetStaticFieldData() {
-      return this.r("il2cpp_class_get_static_field_data", "pointer", [ "pointer" ]);
-    }
-    static get classGetValueSize() {
-      return this.r("il2cpp_class_value_size", "int32", [ "pointer", "pointer" ]);
-    }
-    static get classGetType() {
-      return this.r("il2cpp_class_get_type", "pointer", [ "pointer" ]);
-    }
-    static get classHasReferences() {
-      return this.r("il2cpp_class_has_references", "bool", [ "pointer" ]);
-    }
-    static get classInit() {
-      return this.r("il2cpp_runtime_class_init", "void", [ "pointer" ]);
-    }
-    static get classIsAbstract() {
-      return this.r("il2cpp_class_is_abstract", "bool", [ "pointer" ]);
-    }
-    static get classIsAssignableFrom() {
-      return this.r("il2cpp_class_is_assignable_from", "bool", [ "pointer", "pointer" ]);
-    }
-    static get classIsBlittable() {
-      return this.r("il2cpp_class_is_blittable", "bool", [ "pointer" ]);
-    }
-    static get classIsEnum() {
-      return this.r("il2cpp_class_is_enum", "bool", [ "pointer" ]);
-    }
-    static get classIsGeneric() {
-      return this.r("il2cpp_class_is_generic", "bool", [ "pointer" ]);
-    }
-    static get classIsInflated() {
-      return this.r("il2cpp_class_is_inflated", "bool", [ "pointer" ]);
-    }
-    static get classIsInterface() {
-      return this.r("il2cpp_class_is_interface", "bool", [ "pointer" ]);
-    }
-    static get classIsSubclassOf() {
-      return this.r("il2cpp_class_is_subclass_of", "bool", [ "pointer", "pointer", "bool" ]);
-    }
-    static get classIsValueType() {
-      return this.r("il2cpp_class_is_valuetype", "bool", [ "pointer" ]);
-    }
-    static get domainAssemblyOpen() {
-      return this.r("il2cpp_domain_assembly_open", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get domainGet() {
-      return this.r("il2cpp_domain_get", "pointer", []);
-    }
-    static get domainGetAssemblies() {
-      return this.r("il2cpp_domain_get_assemblies", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get domainGetObject() {
-      return this.r("il2cpp_domain_get_object", "pointer", []);
-    }
-    static get fieldGetModifier() {
-      return this.r("il2cpp_field_get_modifier", "pointer", [ "pointer" ]);
-    }
-    static get fieldGetClass() {
-      return this.r("il2cpp_field_get_parent", "pointer", [ "pointer" ]);
-    }
-    static get fieldGetFlags() {
-      return this.r("il2cpp_field_get_flags", "int", [ "pointer" ]);
-    }
-    static get fieldGetName() {
-      return this.r("il2cpp_field_get_name", "pointer", [ "pointer" ]);
-    }
-    static get fieldGetOffset() {
-      return this.r("il2cpp_field_get_offset", "int32", [ "pointer" ]);
-    }
-    static get fieldGetStaticValue() {
-      return this.r("il2cpp_field_static_get_value", "void", [ "pointer", "pointer" ]);
-    }
-    static get fieldGetType() {
-      return this.r("il2cpp_field_get_type", "pointer", [ "pointer" ]);
-    }
-    static get fieldIsLiteral() {
-      return this.r("il2cpp_field_is_literal", "bool", [ "pointer" ]);
-    }
-    static get fieldIsStatic() {
-      return this.r("il2cpp_field_is_static", "bool", [ "pointer" ]);
-    }
-    static get fieldIsThreadStatic() {
-      return this.r("il2cpp_field_is_thread_static", "bool", [ "pointer" ]);
-    }
-    static get fieldSetStaticValue() {
-      return this.r("il2cpp_field_static_set_value", "void", [ "pointer", "pointer" ]);
-    }
-    static get free() {
-      return this.r("il2cpp_free", "void", [ "pointer" ]);
-    }
-    static get gcCollect() {
-      return this.r("il2cpp_gc_collect", "void", [ "int" ]);
-    }
-    static get gcCollectALittle() {
-      return this.r("il2cpp_gc_collect_a_little", "void", []);
-    }
-    static get gcDisable() {
-      return this.r("il2cpp_gc_disable", "void", []);
-    }
-    static get gcEnable() {
-      return this.r("il2cpp_gc_enable", "void", []);
-    }
-    static get gcGetHeapSize() {
-      return this.r("il2cpp_gc_get_heap_size", "int64", []);
-    }
-    static get gcGetMaxTimeSlice() {
-      return this.r("il2cpp_gc_get_max_time_slice_ns", "int64", []);
-    }
-    static get gcGetUsedSize() {
-      return this.r("il2cpp_gc_get_used_size", "int64", []);
-    }
-    static get gcHandleGetTarget() {
-      return this.r("il2cpp_gchandle_get_target", "pointer", [ "uint32" ]);
-    }
-    static get gcHandleFree() {
-      return this.r("il2cpp_gchandle_free", "void", [ "uint32" ]);
-    }
-    static get gcHandleNew() {
-      return this.r("il2cpp_gchandle_new", "uint32", [ "pointer", "bool" ]);
-    }
-    static get gcHandleNewWeakRef() {
-      return this.r("il2cpp_gchandle_new_weakref", "uint32", [ "pointer", "bool" ]);
-    }
-    static get gcIsDisabled() {
-      return this.r("il2cpp_gc_is_disabled", "bool", []);
-    }
-    static get gcIsIncremental() {
-      return this.r("il2cpp_gc_is_incremental", "bool", []);
-    }
-    static get gcSetMaxTimeSlice() {
-      return this.r("il2cpp_gc_set_max_time_slice_ns", "void", [ "int64" ]);
-    }
-    static get gcStartIncrementalCollection() {
-      return this.r("il2cpp_gc_start_incremental_collection", "void", []);
-    }
-    static get gcStartWorld() {
-      return this.r("il2cpp_start_gc_world", "void", []);
-    }
-    static get gcStopWorld() {
-      return this.r("il2cpp_stop_gc_world", "void", []);
-    }
-    static get getCorlib() {
-      return this.r("il2cpp_get_corlib", "pointer", []);
-    }
-    static get imageGetAssembly() {
-      return this.r("il2cpp_image_get_assembly", "pointer", [ "pointer" ]);
-    }
-    static get imageGetClass() {
-      return this.r("il2cpp_image_get_class", "pointer", [ "pointer", "uint" ]);
-    }
-    static get imageGetClassCount() {
-      return this.r("il2cpp_image_get_class_count", "uint32", [ "pointer" ]);
-    }
-    static get imageGetName() {
-      return this.r("il2cpp_image_get_name", "pointer", [ "pointer" ]);
-    }
-    static get init() {
-      return this.r("il2cpp_init", "void", [ "pointer" ]);
-    }
-    static get livenessAllocateStruct() {
-      return this.r("il2cpp_unity_liveness_allocate_struct", "pointer", [ "pointer", "int", "pointer", "pointer", "pointer" ]);
-    }
-    static get livenessCalculationBegin() {
-      return this.r("il2cpp_unity_liveness_calculation_begin", "pointer", [ "pointer", "int", "pointer", "pointer", "pointer", "pointer" ]);
-    }
-    static get livenessCalculationEnd() {
-      return this.r("il2cpp_unity_liveness_calculation_end", "void", [ "pointer" ]);
-    }
-    static get livenessCalculationFromStatics() {
-      return this.r("il2cpp_unity_liveness_calculation_from_statics", "void", [ "pointer" ]);
-    }
-    static get livenessFinalize() {
-      return this.r("il2cpp_unity_liveness_finalize", "void", [ "pointer" ]);
-    }
-    static get livenessFreeStruct() {
-      return this.r("il2cpp_unity_liveness_free_struct", "void", [ "pointer" ]);
-    }
-    static get memorySnapshotCapture() {
-      return this.r("il2cpp_capture_memory_snapshot", "pointer", []);
-    }
-    static get memorySnapshotFree() {
-      return this.r("il2cpp_free_captured_memory_snapshot", "void", [ "pointer" ]);
-    }
-    static get memorySnapshotGetClasses() {
-      return this.r("il2cpp_memory_snapshot_get_classes", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get memorySnapshotGetObjects() {
-      return this.r("il2cpp_memory_snapshot_get_objects", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get memorySnapshotGetRuntimeInformation() {
-      return this.r("il2cpp_memory_snapshot_get_information", [ "uint32", "uint32", "uint32", "uint32", "uint32", "uint32" ], [ "pointer" ]);
-    }
-    static get methodGetModifier() {
-      return this.r("il2cpp_method_get_modifier", "pointer", [ "pointer" ]);
-    }
-    static get methodGetClass() {
-      return this.r("il2cpp_method_get_class", "pointer", [ "pointer" ]);
-    }
-    static get methodGetFlags() {
-      return this.r("il2cpp_method_get_flags", "uint32", [ "pointer", "pointer" ]);
-    }
-    static get methodGetFromReflection() {
-      return this.r("il2cpp_method_get_from_reflection", "pointer", [ "pointer" ]);
-    }
-    static get methodGetName() {
-      return this.r("il2cpp_method_get_name", "pointer", [ "pointer" ]);
-    }
-    static get methodGetObject() {
-      return this.r("il2cpp_method_get_object", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get methodGetParameterCount() {
-      return this.r("il2cpp_method_get_param_count", "uint8", [ "pointer" ]);
-    }
-    static get methodGetParameterName() {
-      return this.r("il2cpp_method_get_param_name", "pointer", [ "pointer", "uint32" ]);
-    }
-    static get methodGetParameters() {
-      return this.r("il2cpp_method_get_parameters", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get methodGetParameterType() {
-      return this.r("il2cpp_method_get_param", "pointer", [ "pointer", "uint32" ]);
-    }
-    static get methodGetPointer() {
-      return this.r("il2cpp_method_get_pointer", "pointer", [ "pointer" ]);
-    }
-    static get methodGetReturnType() {
-      return this.r("il2cpp_method_get_return_type", "pointer", [ "pointer" ]);
-    }
-    static get methodIsExternal() {
-      return this.r("il2cpp_method_is_external", "bool", [ "pointer" ]);
-    }
-    static get methodIsGeneric() {
-      return this.r("il2cpp_method_is_generic", "bool", [ "pointer" ]);
-    }
-    static get methodIsInflated() {
-      return this.r("il2cpp_method_is_inflated", "bool", [ "pointer" ]);
-    }
-    static get methodIsInstance() {
-      return this.r("il2cpp_method_is_instance", "bool", [ "pointer" ]);
-    }
-    static get methodIsSynchronized() {
-      return this.r("il2cpp_method_is_synchronized", "bool", [ "pointer" ]);
-    }
-    static get monitorEnter() {
-      return this.r("il2cpp_monitor_enter", "void", [ "pointer" ]);
-    }
-    static get monitorExit() {
-      return this.r("il2cpp_monitor_exit", "void", [ "pointer" ]);
-    }
-    static get monitorPulse() {
-      return this.r("il2cpp_monitor_pulse", "void", [ "pointer" ]);
-    }
-    static get monitorPulseAll() {
-      return this.r("il2cpp_monitor_pulse_all", "void", [ "pointer" ]);
-    }
-    static get monitorTryEnter() {
-      return this.r("il2cpp_monitor_try_enter", "bool", [ "pointer", "uint32" ]);
-    }
-    static get monitorTryWait() {
-      return this.r("il2cpp_monitor_try_wait", "bool", [ "pointer", "uint32" ]);
-    }
-    static get monitorWait() {
-      return this.r("il2cpp_monitor_wait", "void", [ "pointer" ]);
-    }
-    static get objectGetClass() {
-      return this.r("il2cpp_object_get_class", "pointer", [ "pointer" ]);
-    }
-    static get objectGetVirtualMethod() {
-      return this.r("il2cpp_object_get_virtual_method", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get objectInit() {
-      return this.r("il2cpp_runtime_object_init_exception", "void", [ "pointer", "pointer" ]);
-    }
-    static get objectNew() {
-      return this.r("il2cpp_object_new", "pointer", [ "pointer" ]);
-    }
-    static get objectGetSize() {
-      return this.r("il2cpp_object_get_size", "uint32", [ "pointer" ]);
-    }
-    static get objectUnbox() {
-      return this.r("il2cpp_object_unbox", "pointer", [ "pointer" ]);
-    }
-    static get resolveInternalCall() {
-      return this.r("il2cpp_resolve_icall", "pointer", [ "pointer" ]);
-    }
-    static get stringChars() {
-      return this.r("il2cpp_string_chars", "pointer", [ "pointer" ]);
-    }
-    static get stringLength() {
-      return this.r("il2cpp_string_length", "int32", [ "pointer" ]);
-    }
-    static get stringNew() {
-      return this.r("il2cpp_string_new", "pointer", [ "pointer" ]);
-    }
-    static get stringSetLength() {
-      return this.r("il2cpp_string_set_length", "void", [ "pointer", "int32" ]);
-    }
-    static get valueBox() {
-      return this.r("il2cpp_value_box", "pointer", [ "pointer", "pointer" ]);
-    }
-    static get threadAttach() {
-      return this.r("il2cpp_thread_attach", "pointer", [ "pointer" ]);
-    }
-    static get threadCurrent() {
-      return this.r("il2cpp_thread_current", "pointer", []);
-    }
-    static get threadGetAllAttachedThreads() {
-      return this.r("il2cpp_thread_get_all_attached_threads", "pointer", [ "pointer" ]);
-    }
-    static get threadIsVm() {
-      return this.r("il2cpp_is_vm_thread", "bool", [ "pointer" ]);
-    }
-    static get threadDetach() {
-      return this.r("il2cpp_thread_detach", "void", [ "pointer" ]);
-    }
-    static get typeGetName() {
-      return this.r("il2cpp_type_get_name", "pointer", [ "pointer" ]);
-    }
-    static get typeGetObject() {
-      return this.r("il2cpp_type_get_object", "pointer", [ "pointer" ]);
-    }
-    static get typeGetTypeEnum() {
-      return this.r("il2cpp_type_get_type", "int", [ "pointer" ]);
-    }
-    static get typeIsByReference() {
-      return this.r("il2cpp_type_is_byref", "bool", [ "pointer" ]);
-    }
-    static get typeIsPrimitive() {
-      return this.r("il2cpp_type_is_primitive", "bool", [ "pointer" ]);
-    }
-    static get cModule() {
-      const t = new CModule("#include <stdint.h>\n\n#define OFFSET_OF(name, type)                                                  \\\n  int16_t name (char * p, type e)                                              \\\n  {                                                                            \\\n    for (int16_t i = 0; i < 512; i++)                                          \\\n      if (*((type *) p + i) == e)                                              \\\n        return i;                                                              \\\n    return -1;                                                                 \\\n  }\n\nOFFSET_OF (offset_of_int32, int32_t)\nOFFSET_OF (offset_of_pointer, void *)\n"), n = new NativeFunction(t.offset_of_int32, "int16", [ "pointer", "int32" ]), i = new NativeFunction(t.offset_of_pointer, "int16", [ "pointer", "pointer" ]), r = e.corlib.class("System.String"), s = e.corlib.class("System.DateTime"), a = e.corlib.class("System.Reflection.Module");
-      s.initialize(), a.initialize();
-      const l = (s.tryField("daysmonth") ?? s.tryField("DaysToMonth365") ?? s.field("s_daysToMonth365")).value, o = a.field("FilterTypeName").value, c = o.field("method_ptr").value, p = o.field("method").value, u = o.method("Invoke"), d = `\n                #define IL2CPP_STRING_SET_LENGTH_OFFSET ${n(e.string("vfsfitvnm"), 9)}\n                #define IL2CPP_ARRAY_GET_ELEMENTS_OFFSET ${n(l, 31) - 1}\n                #define IL2CPP_CLASS_GET_ACTUAL_INSTANCE_SIZE_OFFSET ${n(r, r.instanceSize - 2)}\n                #define IL2CPP_METHOD_GET_POINTER_OFFSET ${i(p, c)}\n                #define IL2CPP_METHOD_GET_FROM_REFLECTION_OFFSET ${i(u.object, u)}\n            `;
-      t.dispose();
-      return new CModule(d + '#include <stdint.h>\n#include <string.h>\n\ntypedef void Il2CppArray;\ntypedef void Il2CppAssembly;\ntypedef void Il2CppClass;\ntypedef void Il2CppDomain;\ntypedef void Il2CppField;\ntypedef void Il2CppImage;\ntypedef void Il2CppMethod;\ntypedef void Il2CppObject;\ntypedef void Il2CppString;\ntypedef void Il2CppType;\n\ntypedef enum _Il2CppTypeEnum Il2CppTypeEnum;\n\nenum _Il2CppTypeEnum\n{\n  IL2CPP_TYPE_END = 0x00,\n  IL2CPP_TYPE_VOID = 0x01,\n  IL2CPP_TYPE_BOOLEAN = 0x02,\n  IL2CPP_TYPE_CHAR = 0x03,\n  IL2CPP_TYPE_I1 = 0x04,\n  IL2CPP_TYPE_U1 = 0x05,\n  IL2CPP_TYPE_I2 = 0x06,\n  IL2CPP_TYPE_U2 = 0x07,\n  IL2CPP_TYPE_I4 = 0x08,\n  IL2CPP_TYPE_U4 = 0x09,\n  IL2CPP_TYPE_I8 = 0x0a,\n  IL2CPP_TYPE_U8 = 0x0b,\n  IL2CPP_TYPE_R4 = 0x0c,\n  IL2CPP_TYPE_R8 = 0x0d,\n  IL2CPP_TYPE_STRING = 0x0e,\n  IL2CPP_TYPE_PTR = 0x0f,\n  IL2CPP_TYPE_BYREF = 0x10,\n  IL2CPP_TYPE_VALUETYPE = 0x11,\n  IL2CPP_TYPE_CLASS = 0x12,\n  IL2CPP_TYPE_VAR = 0x13,\n  IL2CPP_TYPE_ARRAY = 0x14,\n  IL2CPP_TYPE_GENERICINST = 0x15,\n  IL2CPP_TYPE_TYPEDBYREF = 0x16,\n  IL2CPP_TYPE_I = 0x18,\n  IL2CPP_TYPE_U = 0x19,\n  IL2CPP_TYPE_FNPTR = 0x1b,\n  IL2CPP_TYPE_OBJECT = 0x1c,\n  IL2CPP_TYPE_SZARRAY = 0x1d,\n  IL2CPP_TYPE_MVAR = 0x1e,\n  IL2CPP_TYPE_CMOD_REQD = 0x1f,\n  IL2CPP_TYPE_CMOD_OPT = 0x20,\n  IL2CPP_TYPE_INTERNAL = 0x21,\n  IL2CPP_TYPE_MODIFIER = 0x40,\n  IL2CPP_TYPE_SENTINEL = 0x41,\n  IL2CPP_TYPE_PINNED = 0x45,\n  IL2CPP_TYPE_ENUM = 0x55\n};\n\n#define THREAD_STATIC_FIELD_OFFSET -1;\n\n#define FIELD_ATTRIBUTE_FIELD_ACCESS_MASK 0x0007\n#define FIELD_ATTRIBUTE_COMPILER_CONTROLLED 0x0000\n#define FIELD_ATTRIBUTE_PRIVATE 0x0001\n#define FIELD_ATTRIBUTE_FAM_AND_ASSEM 0x0002\n#define FIELD_ATTRIBUTE_ASSEMBLY 0x0003\n#define FIELD_ATTRIBUTE_FAMILY 0x0004\n#define FIELD_ATTRIBUTE_FAM_OR_ASSEM 0x0005\n#define FIELD_ATTRIBUTE_PUBLIC 0x0006\n\n#define FIELD_ATTRIBUTE_STATIC 0x0010\n#define FIELD_ATTRIBUTE_LITERAL 0x0040\n\n#define METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK 0x0007\n#define METHOD_ATTRIBUTE_COMPILER_CONTROLLED 0x0000\n#define METHOD_ATTRIBUTE_PRIVATE 0x0001\n#define METHOD_ATTRIBUTE_FAM_AND_ASSEM 0x0002\n#define METHOD_ATTRIBUTE_ASSEMBLY 0x0003\n#define METHOD_ATTRIBUTE_FAMILY 0x0004\n#define METHOD_ATTRIBUTE_FAM_OR_ASSEM 0x0005\n#define METHOD_ATTRIBUTE_PUBLIC 0x0006\n\n#define METHOD_ATTRIBUTE_STATIC 0x0010\n#define METHOD_IMPL_ATTRIBUTE_INTERNAL_CALL 0x1000\n#define METHOD_IMPL_ATTRIBUTE_SYNCHRONIZED 0x0020\n\n#ifndef IL2CPP_STRING_SET_LENGTH_OFFSET\n#define IL2CPP_STRING_SET_LENGTH_OFFSET 0\n#endif\n\n#ifndef IL2CPP_ARRAY_GET_ELEMENTS_OFFSET\n#define IL2CPP_ARRAY_GET_ELEMENTS_OFFSET 0\n#endif\n\n#ifndef IL2CPP_CLASS_GET_ACTUAL_INSTANCE_SIZE_OFFSET\n#define IL2CPP_CLASS_GET_ACTUAL_INSTANCE_SIZE_OFFSET 0\n#endif\n\n#ifndef IL2CPP_METHOD_GET_POINTER_OFFSET\n#define IL2CPP_METHOD_GET_POINTER_OFFSET 0\n#endif\n\n#ifndef IL2CPP_METHOD_GET_FROM_REFLECTION_OFFSET\n#define IL2CPP_METHOD_GET_FROM_REFLECTION_OFFSET 0\n#endif\n\nextern Il2CppClass * il2cpp_class_from_name (const Il2CppImage *, const char *,\n                                             const char *);\nextern Il2CppMethod * il2cpp_class_get_method_from_name (Il2CppClass *,\n                                                         const char *, int32_t);\nextern const char * il2cpp_class_get_name (Il2CppClass *);\nextern int il2cpp_field_get_flags (Il2CppField *);\nextern size_t il2cpp_field_get_offset (Il2CppField *);\nextern void il2cpp_free (void *);\nextern const Il2CppImage * il2cpp_image_get_corlib (void);\nextern uint32_t il2cpp_method_get_flags (Il2CppMethod *, uint32_t *);\nextern char * il2cpp_type_get_name (Il2CppType *);\nextern Il2CppTypeEnum il2cpp_type_get_type_enum (Il2CppType *);\n\nvoid\nil2cpp_string_set_length (Il2CppString * string, int32_t length)\n{\n  *((int32_t *) string + IL2CPP_STRING_SET_LENGTH_OFFSET) = length;\n}\n\nvoid *\nil2cpp_array_get_elements (Il2CppArray * array)\n{\n  return (int32_t *) array + IL2CPP_ARRAY_GET_ELEMENTS_OFFSET;\n}\n\nuint8_t\nil2cpp_type_is_byref (Il2CppType * type)\n{\n  char * name;\n  char last_char;\n\n  name = il2cpp_type_get_name (type);\n  last_char = name[strlen (name) - 1];\n\n  il2cpp_free (name);\n  return last_char == \'&\';\n}\n\nuint8_t\nil2cpp_type_is_primitive (Il2CppType * type)\n{\n  Il2CppTypeEnum type_enum;\n\n  type_enum = il2cpp_type_get_type_enum (type);\n\n  return ((type_enum >= IL2CPP_TYPE_BOOLEAN && type_enum <= IL2CPP_TYPE_R8) ||\n          type_enum == IL2CPP_TYPE_I || type_enum == IL2CPP_TYPE_U);\n}\n\nint32_t\nil2cpp_class_get_actual_instance_size (Il2CppClass * class)\n{\n  return *((int32_t *) class + IL2CPP_CLASS_GET_ACTUAL_INSTANCE_SIZE_OFFSET);\n}\n\nuint8_t\nil2cpp_class_get_rank (Il2CppClass * class)\n{\n  uint8_t rank;\n  const char * name;\n\n  rank = 0;\n  name = il2cpp_class_get_name (class);\n\n  for (uint16_t i = strlen (name) - 1; i > 0; i--)\n  {\n    char c = name[i];\n\n    if (c == \']\')\n      rank++;\n    else if (c == \'[\' || rank == 0)\n      break;\n    else if (c == \',\')\n      rank++;\n    else\n      break;\n  }\n\n  return rank;\n}\n\nconst char *\nil2cpp_field_get_modifier (Il2CppField * field)\n{\n  int flags;\n\n  flags = il2cpp_field_get_flags (field);\n\n  switch (flags & FIELD_ATTRIBUTE_FIELD_ACCESS_MASK)\n  {\n  case FIELD_ATTRIBUTE_PRIVATE:\n    return "private";\n  case FIELD_ATTRIBUTE_FAM_AND_ASSEM:\n    return "private protected";\n  case FIELD_ATTRIBUTE_ASSEMBLY:\n    return "internal";\n  case FIELD_ATTRIBUTE_FAMILY:\n    return "protected";\n  case FIELD_ATTRIBUTE_FAM_OR_ASSEM:\n    return "protected internal";\n  case FIELD_ATTRIBUTE_PUBLIC:\n    return "public";\n  }\n\n  return "";\n}\n\nuint8_t\nil2cpp_field_is_literal (Il2CppField * field)\n{\n  return (il2cpp_field_get_flags (field) & FIELD_ATTRIBUTE_LITERAL) != 0;\n}\n\nuint8_t\nil2cpp_field_is_static (Il2CppField * field)\n{\n  return (il2cpp_field_get_flags (field) & FIELD_ATTRIBUTE_STATIC) != 0;\n}\n\nuint8_t\nil2cpp_field_is_thread_static (Il2CppField * field)\n{\n  return il2cpp_field_get_offset (field) == THREAD_STATIC_FIELD_OFFSET;\n}\n\nconst char *\nil2cpp_method_get_modifier (Il2CppMethod * method)\n{\n  uint32_t flags;\n\n  flags = il2cpp_method_get_flags (method, NULL);\n\n  switch (flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK)\n  {\n  case METHOD_ATTRIBUTE_PRIVATE:\n    return "private";\n  case METHOD_ATTRIBUTE_FAM_AND_ASSEM:\n    return "private protected";\n  case METHOD_ATTRIBUTE_ASSEMBLY:\n    return "internal";\n  case METHOD_ATTRIBUTE_FAMILY:\n    return "protected";\n  case METHOD_ATTRIBUTE_FAM_OR_ASSEM:\n    return "protected internal";\n  case METHOD_ATTRIBUTE_PUBLIC:\n    return "public";\n  }\n\n  return "";\n}\n\nIl2CppMethod *\nil2cpp_method_get_from_reflection (Il2CppObject * object)\n{\n  return *((void **) object + IL2CPP_METHOD_GET_FROM_REFLECTION_OFFSET);\n}\n\nvoid *\nil2cpp_method_get_pointer (Il2CppMethod * method)\n{\n  return *((void **) method + IL2CPP_METHOD_GET_POINTER_OFFSET);\n}\n\nuint8_t\nil2cpp_method_is_external (Il2CppMethod * method)\n{\n  uint32_t implementation_flags;\n\n  il2cpp_method_get_flags (method, &implementation_flags);\n\n  return (implementation_flags & METHOD_IMPL_ATTRIBUTE_INTERNAL_CALL) != 0;\n}\n\nuint8_t\nil2cpp_method_is_synchronized (Il2CppMethod * method)\n{\n  uint32_t implementation_flags;\n\n  il2cpp_method_get_flags (method, &implementation_flags);\n\n  return (implementation_flags & METHOD_IMPL_ATTRIBUTE_SYNCHRONIZED) != 0;\n}\n\nIl2CppObject *\nil2cpp_domain_get_object (void)\n{\n  const Il2CppImage * cor_image = il2cpp_image_get_corlib ();\n  Il2CppClass * system_appdomain_class =\n      il2cpp_class_from_name (cor_image, "System", "AppDomain");\n  Il2CppMethod * get_current_domain_method = il2cpp_class_get_method_from_name (\n      system_appdomain_class, "get_CurrentDomain", 0);\n  Il2CppObject * (*get_current_domain) (void) =\n      il2cpp_method_get_pointer (get_current_domain_method);\n\n  return get_current_domain ();\n}\n#include <stdint.h>\n#include <string.h>\n\ntypedef struct Il2CppManagedMemorySnapshot Il2CppManagedMemorySnapshot;\ntypedef struct Il2CppMetadataType Il2CppMetadataType;\n\nstruct Il2CppManagedMemorySnapshot\n{\n  struct Il2CppManagedHeap\n  {\n    uint32_t section_count;\n    void * sections;\n  } heap;\n  struct Il2CppStacks\n  {\n    uint32_t stack_count;\n    void * stacks;\n  } stacks;\n  struct Il2CppMetadataSnapshot\n  {\n    uint32_t type_count;\n    Il2CppMetadataType * types;\n  } metadata_snapshot;\n  struct Il2CppGCHandles\n  {\n    uint32_t tracked_object_count;\n    void ** pointers_to_objects;\n  } gc_handles;\n  struct Il2CppRuntimeInformation\n  {\n    uint32_t pointer_size;\n    uint32_t object_header_size;\n    uint32_t array_header_size;\n    uint32_t array_bounds_offset_in_header;\n    uint32_t array_size_offset_in_header;\n    uint32_t allocation_granularity;\n  } runtime_information;\n  void * additional_user_information;\n};\n\nstruct Il2CppMetadataType\n{\n  uint32_t flags;\n  void * fields;\n  uint32_t field_count;\n  uint32_t statics_size;\n  uint8_t * statics;\n  uint32_t base_or_element_type_index;\n  char * name;\n  const char * assembly_name;\n  uint64_t type_info_address;\n  uint32_t size;\n};\n\nuintptr_t\nil2cpp_memory_snapshot_get_classes (\n    const Il2CppManagedMemorySnapshot * snapshot, Il2CppMetadataType ** iter)\n{\n  const int zero = 0;\n  const void * null = 0;\n\n  if (iter != NULL && snapshot->metadata_snapshot.type_count > zero)\n  {\n    if (*iter == null)\n    {\n      *iter = snapshot->metadata_snapshot.types;\n      return (uintptr_t) (*iter)->type_info_address;\n    }\n    else\n    {\n      Il2CppMetadataType * metadata_type = *iter + 1;\n\n      if (metadata_type < snapshot->metadata_snapshot.types +\n                              snapshot->metadata_snapshot.type_count)\n      {\n        *iter = metadata_type;\n        return (uintptr_t) (*iter)->type_info_address;\n      }\n    }\n  }\n  return 0;\n}\n\nvoid **\nil2cpp_memory_snapshot_get_objects (\n    const Il2CppManagedMemorySnapshot * snapshot, uint32_t * size)\n{\n  *size = snapshot->gc_handles.tracked_object_count;\n  return snapshot->gc_handles.pointers_to_objects;\n}\n\nstruct Il2CppRuntimeInformation\nil2cpp_memory_snapshot_get_information (\n    const Il2CppManagedMemorySnapshot * snapshot)\n{\n  return snapshot->runtime_information;\n}\n', {
-        il2cpp_class_from_name: this.classFromName,
-        il2cpp_class_get_method_from_name: this.classGetMethodFromName,
-        il2cpp_class_get_name: this.classGetName,
-        il2cpp_field_get_flags: this.fieldGetFlags,
-        il2cpp_field_get_offset: this.fieldGetOffset,
-        il2cpp_free: this.free,
-        il2cpp_image_get_corlib: this.getCorlib,
-        il2cpp_method_get_flags: this.methodGetFlags,
-        il2cpp_type_get_name: this.typeGetName,
-        il2cpp_type_get_type_enum: this.typeGetTypeEnum
-      });
-    }
-    static r(t, n, r) {
-      const s = e.module.findExportByName(t) ?? this.cModule[t];
-      return null == s && i(`cannot resolve export ${t}`), new NativeFunction(s, n, r);
-    }
+  function t(t, n, i) {
+    const s = e.module.findExportByName(t) ?? e.memorySnapshotApi[t];
+    return new NativeFunction(s ?? r(`couldn't resolve export ${t}`), n, i);
   }
-  n([ o ], t, "alloc", null), n([ o ], t, "arrayGetElements", null), n([ o ], t, "arrayGetLength", null), 
-  n([ o ], t, "arrayNew", null), n([ o ], t, "assemblyGetImage", null), n([ o ], t, "classForEach", null), 
-  n([ o ], t, "classFromName", null), n([ o ], t, "classFromSystemType", null), n([ o ], t, "classFromType", null), 
-  n([ o ], t, "classGetActualInstanceSize", null), n([ o ], t, "classGetArrayClass", null), 
-  n([ o ], t, "classGetArrayElementSize", null), n([ o ], t, "classGetAssemblyName", null), 
-  n([ o ], t, "classGetBaseType", null), n([ o ], t, "classGetDeclaringType", null), 
-  n([ o ], t, "classGetElementClass", null), n([ o ], t, "classGetFieldFromName", null), 
-  n([ o ], t, "classGetFields", null), n([ o ], t, "classGetFlags", null), n([ o ], t, "classGetImage", null), 
-  n([ o ], t, "classGetInstanceSize", null), n([ o ], t, "classGetInterfaces", null), 
-  n([ o ], t, "classGetMethodFromName", null), n([ o ], t, "classGetMethods", null), 
-  n([ o ], t, "classGetName", null), n([ o ], t, "classGetNamespace", null), n([ o ], t, "classGetNestedClasses", null), 
-  n([ o ], t, "classGetParent", null), n([ o ], t, "classGetRank", null), n([ o ], t, "classGetStaticFieldData", null), 
-  n([ o ], t, "classGetValueSize", null), n([ o ], t, "classGetType", null), n([ o ], t, "classHasReferences", null), 
-  n([ o ], t, "classInit", null), n([ o ], t, "classIsAbstract", null), n([ o ], t, "classIsAssignableFrom", null), 
-  n([ o ], t, "classIsBlittable", null), n([ o ], t, "classIsEnum", null), n([ o ], t, "classIsGeneric", null), 
-  n([ o ], t, "classIsInflated", null), n([ o ], t, "classIsInterface", null), n([ o ], t, "classIsSubclassOf", null), 
-  n([ o ], t, "classIsValueType", null), n([ o ], t, "domainAssemblyOpen", null), 
-  n([ o ], t, "domainGet", null), n([ o ], t, "domainGetAssemblies", null), n([ o ], t, "domainGetObject", null), 
-  n([ o ], t, "fieldGetModifier", null), n([ o ], t, "fieldGetClass", null), n([ o ], t, "fieldGetFlags", null), 
-  n([ o ], t, "fieldGetName", null), n([ o ], t, "fieldGetOffset", null), n([ o ], t, "fieldGetStaticValue", null), 
-  n([ o ], t, "fieldGetType", null), n([ o ], t, "fieldIsLiteral", null), n([ o ], t, "fieldIsStatic", null), 
-  n([ o ], t, "fieldIsThreadStatic", null), n([ o ], t, "fieldSetStaticValue", null), 
-  n([ o ], t, "free", null), n([ o ], t, "gcCollect", null), n([ o ], t, "gcCollectALittle", null), 
-  n([ o ], t, "gcDisable", null), n([ o ], t, "gcEnable", null), n([ o ], t, "gcGetHeapSize", null), 
-  n([ o ], t, "gcGetMaxTimeSlice", null), n([ o ], t, "gcGetUsedSize", null), n([ o ], t, "gcHandleGetTarget", null), 
-  n([ o ], t, "gcHandleFree", null), n([ o ], t, "gcHandleNew", null), n([ o ], t, "gcHandleNewWeakRef", null), 
-  n([ o ], t, "gcIsDisabled", null), n([ o ], t, "gcIsIncremental", null), n([ o ], t, "gcSetMaxTimeSlice", null), 
-  n([ o ], t, "gcStartIncrementalCollection", null), n([ o ], t, "gcStartWorld", null), 
-  n([ o ], t, "gcStopWorld", null), n([ o ], t, "getCorlib", null), n([ o ], t, "imageGetAssembly", null), 
-  n([ o ], t, "imageGetClass", null), n([ o ], t, "imageGetClassCount", null), n([ o ], t, "imageGetName", null), 
-  n([ o ], t, "init", null), n([ o ], t, "livenessAllocateStruct", null), n([ o ], t, "livenessCalculationBegin", null), 
-  n([ o ], t, "livenessCalculationEnd", null), n([ o ], t, "livenessCalculationFromStatics", null), 
-  n([ o ], t, "livenessFinalize", null), n([ o ], t, "livenessFreeStruct", null), 
-  n([ o ], t, "memorySnapshotCapture", null), n([ o ], t, "memorySnapshotFree", null), 
-  n([ o ], t, "memorySnapshotGetClasses", null), n([ o ], t, "memorySnapshotGetObjects", null), 
-  n([ o ], t, "memorySnapshotGetRuntimeInformation", null), n([ o ], t, "methodGetModifier", null), 
-  n([ o ], t, "methodGetClass", null), n([ o ], t, "methodGetFlags", null), n([ o ], t, "methodGetFromReflection", null), 
-  n([ o ], t, "methodGetName", null), n([ o ], t, "methodGetObject", null), n([ o ], t, "methodGetParameterCount", null), 
-  n([ o ], t, "methodGetParameterName", null), n([ o ], t, "methodGetParameters", null), 
-  n([ o ], t, "methodGetParameterType", null), n([ o ], t, "methodGetPointer", null), 
-  n([ o ], t, "methodGetReturnType", null), n([ o ], t, "methodIsExternal", null), 
-  n([ o ], t, "methodIsGeneric", null), n([ o ], t, "methodIsInflated", null), n([ o ], t, "methodIsInstance", null), 
-  n([ o ], t, "methodIsSynchronized", null), n([ o ], t, "monitorEnter", null), n([ o ], t, "monitorExit", null), 
-  n([ o ], t, "monitorPulse", null), n([ o ], t, "monitorPulseAll", null), n([ o ], t, "monitorTryEnter", null), 
-  n([ o ], t, "monitorTryWait", null), n([ o ], t, "monitorWait", null), n([ o ], t, "objectGetClass", null), 
-  n([ o ], t, "objectGetVirtualMethod", null), n([ o ], t, "objectInit", null), n([ o ], t, "objectNew", null), 
-  n([ o ], t, "objectGetSize", null), n([ o ], t, "objectUnbox", null), n([ o ], t, "resolveInternalCall", null), 
-  n([ o ], t, "stringChars", null), n([ o ], t, "stringLength", null), n([ o ], t, "stringNew", null), 
-  n([ o ], t, "stringSetLength", null), n([ o ], t, "valueBox", null), n([ o ], t, "threadAttach", null), 
-  n([ o ], t, "threadCurrent", null), n([ o ], t, "threadGetAllAttachedThreads", null), 
-  n([ o ], t, "threadIsVm", null), n([ o ], t, "threadDetach", null), n([ o ], t, "typeGetName", null), 
-  n([ o ], t, "typeGetObject", null), n([ o ], t, "typeGetTypeEnum", null), n([ o ], t, "typeIsByReference", null), 
-  n([ o ], t, "typeIsPrimitive", null), n([ o ], t, "cModule", null), e.Api = t;
+  e.api = {
+    get alloc() {
+      return t("il2cpp_alloc", "pointer", [ "size_t" ]);
+    },
+    get arrayGetLength() {
+      return t("il2cpp_array_length", "uint32", [ "pointer" ]);
+    },
+    get arrayNew() {
+      return t("il2cpp_array_new", "pointer", [ "pointer", "uint32" ]);
+    },
+    get assemblyGetImage() {
+      return t("il2cpp_assembly_get_image", "pointer", [ "pointer" ]);
+    },
+    get classForEach() {
+      return t("il2cpp_class_for_each", "void", [ "pointer", "pointer" ]);
+    },
+    get classFromName() {
+      return t("il2cpp_class_from_name", "pointer", [ "pointer", "pointer", "pointer" ]);
+    },
+    get classFromObject() {
+      return t("il2cpp_class_from_system_type", "pointer", [ "pointer" ]);
+    },
+    get classGetArrayClass() {
+      return t("il2cpp_array_class_get", "pointer", [ "pointer", "uint32" ]);
+    },
+    get classGetArrayElementSize() {
+      return t("il2cpp_class_array_element_size", "int", [ "pointer" ]);
+    },
+    get classGetAssemblyName() {
+      return t("il2cpp_class_get_assemblyname", "pointer", [ "pointer" ]);
+    },
+    get classGetBaseType() {
+      return t("il2cpp_class_enum_basetype", "pointer", [ "pointer" ]);
+    },
+    get classGetDeclaringType() {
+      return t("il2cpp_class_get_declaring_type", "pointer", [ "pointer" ]);
+    },
+    get classGetElementClass() {
+      return t("il2cpp_class_get_element_class", "pointer", [ "pointer" ]);
+    },
+    get classGetFieldFromName() {
+      return t("il2cpp_class_get_field_from_name", "pointer", [ "pointer", "pointer" ]);
+    },
+    get classGetFields() {
+      return t("il2cpp_class_get_fields", "pointer", [ "pointer", "pointer" ]);
+    },
+    get classGetFlags() {
+      return t("il2cpp_class_get_flags", "int", [ "pointer" ]);
+    },
+    get classGetImage() {
+      return t("il2cpp_class_get_image", "pointer", [ "pointer" ]);
+    },
+    get classGetInstanceSize() {
+      return t("il2cpp_class_instance_size", "int32", [ "pointer" ]);
+    },
+    get classGetInterfaces() {
+      return t("il2cpp_class_get_interfaces", "pointer", [ "pointer", "pointer" ]);
+    },
+    get classGetMethodFromName() {
+      return t("il2cpp_class_get_method_from_name", "pointer", [ "pointer", "pointer", "int" ]);
+    },
+    get classGetMethods() {
+      return t("il2cpp_class_get_methods", "pointer", [ "pointer", "pointer" ]);
+    },
+    get classGetName() {
+      return t("il2cpp_class_get_name", "pointer", [ "pointer" ]);
+    },
+    get classGetNamespace() {
+      return t("il2cpp_class_get_namespace", "pointer", [ "pointer" ]);
+    },
+    get classGetNestedClasses() {
+      return t("il2cpp_class_get_nested_types", "pointer", [ "pointer", "pointer" ]);
+    },
+    get classGetParent() {
+      return t("il2cpp_class_get_parent", "pointer", [ "pointer" ]);
+    },
+    get classGetStaticFieldData() {
+      return t("il2cpp_class_get_static_field_data", "pointer", [ "pointer" ]);
+    },
+    get classGetValueTypeSize() {
+      return t("il2cpp_class_value_size", "int32", [ "pointer", "pointer" ]);
+    },
+    get classGetType() {
+      return t("il2cpp_class_get_type", "pointer", [ "pointer" ]);
+    },
+    get classHasReferences() {
+      return t("il2cpp_class_has_references", "bool", [ "pointer" ]);
+    },
+    get classInitialize() {
+      return t("il2cpp_runtime_class_init", "void", [ "pointer" ]);
+    },
+    get classIsAbstract() {
+      return t("il2cpp_class_is_abstract", "bool", [ "pointer" ]);
+    },
+    get classIsAssignableFrom() {
+      return t("il2cpp_class_is_assignable_from", "bool", [ "pointer", "pointer" ]);
+    },
+    get classIsBlittable() {
+      return t("il2cpp_class_is_blittable", "bool", [ "pointer" ]);
+    },
+    get classIsEnum() {
+      return t("il2cpp_class_is_enum", "bool", [ "pointer" ]);
+    },
+    get classIsGeneric() {
+      return t("il2cpp_class_is_generic", "bool", [ "pointer" ]);
+    },
+    get classIsInflated() {
+      return t("il2cpp_class_is_inflated", "bool", [ "pointer" ]);
+    },
+    get classIsInterface() {
+      return t("il2cpp_class_is_interface", "bool", [ "pointer" ]);
+    },
+    get classIsSubclassOf() {
+      return t("il2cpp_class_is_subclass_of", "bool", [ "pointer", "pointer", "bool" ]);
+    },
+    get classIsValueType() {
+      return t("il2cpp_class_is_valuetype", "bool", [ "pointer" ]);
+    },
+    get domainGetAssemblyFromName() {
+      return t("il2cpp_domain_assembly_open", "pointer", [ "pointer", "pointer" ]);
+    },
+    get domainGet() {
+      return t("il2cpp_domain_get", "pointer", []);
+    },
+    get domainGetAssemblies() {
+      return t("il2cpp_domain_get_assemblies", "pointer", [ "pointer", "pointer" ]);
+    },
+    get fieldGetClass() {
+      return t("il2cpp_field_get_parent", "pointer", [ "pointer" ]);
+    },
+    get fieldGetFlags() {
+      return t("il2cpp_field_get_flags", "int", [ "pointer" ]);
+    },
+    get fieldGetName() {
+      return t("il2cpp_field_get_name", "pointer", [ "pointer" ]);
+    },
+    get fieldGetOffset() {
+      return t("il2cpp_field_get_offset", "int32", [ "pointer" ]);
+    },
+    get fieldGetStaticValue() {
+      return t("il2cpp_field_static_get_value", "void", [ "pointer", "pointer" ]);
+    },
+    get fieldGetType() {
+      return t("il2cpp_field_get_type", "pointer", [ "pointer" ]);
+    },
+    get fieldSetStaticValue() {
+      return t("il2cpp_field_static_set_value", "void", [ "pointer", "pointer" ]);
+    },
+    get free() {
+      return t("il2cpp_free", "void", [ "pointer" ]);
+    },
+    get gcCollect() {
+      return t("il2cpp_gc_collect", "void", [ "int" ]);
+    },
+    get gcCollectALittle() {
+      return t("il2cpp_gc_collect_a_little", "void", []);
+    },
+    get gcDisable() {
+      return t("il2cpp_gc_disable", "void", []);
+    },
+    get gcEnable() {
+      return t("il2cpp_gc_enable", "void", []);
+    },
+    get gcGetHeapSize() {
+      return t("il2cpp_gc_get_heap_size", "int64", []);
+    },
+    get gcGetMaxTimeSlice() {
+      return t("il2cpp_gc_get_max_time_slice_ns", "int64", []);
+    },
+    get gcGetUsedSize() {
+      return t("il2cpp_gc_get_used_size", "int64", []);
+    },
+    get gcHandleGetTarget() {
+      return t("il2cpp_gchandle_get_target", "pointer", [ "uint32" ]);
+    },
+    get gcHandleFree() {
+      return t("il2cpp_gchandle_free", "void", [ "uint32" ]);
+    },
+    get gcHandleNew() {
+      return t("il2cpp_gchandle_new", "uint32", [ "pointer", "bool" ]);
+    },
+    get gcHandleNewWeakRef() {
+      return t("il2cpp_gchandle_new_weakref", "uint32", [ "pointer", "bool" ]);
+    },
+    get gcIsDisabled() {
+      return t("il2cpp_gc_is_disabled", "bool", []);
+    },
+    get gcIsIncremental() {
+      return t("il2cpp_gc_is_incremental", "bool", []);
+    },
+    get gcSetMaxTimeSlice() {
+      return t("il2cpp_gc_set_max_time_slice_ns", "void", [ "int64" ]);
+    },
+    get gcStartIncrementalCollection() {
+      return t("il2cpp_gc_start_incremental_collection", "void", []);
+    },
+    get gcStartWorld() {
+      return t("il2cpp_start_gc_world", "void", []);
+    },
+    get gcStopWorld() {
+      return t("il2cpp_stop_gc_world", "void", []);
+    },
+    get getCorlib() {
+      return t("il2cpp_get_corlib", "pointer", []);
+    },
+    get imageGetAssembly() {
+      return t("il2cpp_image_get_assembly", "pointer", [ "pointer" ]);
+    },
+    get imageGetClass() {
+      return t("il2cpp_image_get_class", "pointer", [ "pointer", "uint" ]);
+    },
+    get imageGetClassCount() {
+      return t("il2cpp_image_get_class_count", "uint32", [ "pointer" ]);
+    },
+    get imageGetName() {
+      return t("il2cpp_image_get_name", "pointer", [ "pointer" ]);
+    },
+    get initialize() {
+      return t("il2cpp_init", "void", [ "pointer" ]);
+    },
+    get livenessAllocateStruct() {
+      return t("il2cpp_unity_liveness_allocate_struct", "pointer", [ "pointer", "int", "pointer", "pointer", "pointer" ]);
+    },
+    get livenessCalculationBegin() {
+      return t("il2cpp_unity_liveness_calculation_begin", "pointer", [ "pointer", "int", "pointer", "pointer", "pointer", "pointer" ]);
+    },
+    get livenessCalculationEnd() {
+      return t("il2cpp_unity_liveness_calculation_end", "void", [ "pointer" ]);
+    },
+    get livenessCalculationFromStatics() {
+      return t("il2cpp_unity_liveness_calculation_from_statics", "void", [ "pointer" ]);
+    },
+    get livenessFinalize() {
+      return t("il2cpp_unity_liveness_finalize", "void", [ "pointer" ]);
+    },
+    get livenessFreeStruct() {
+      return t("il2cpp_unity_liveness_free_struct", "void", [ "pointer" ]);
+    },
+    get memorySnapshotCapture() {
+      return t("il2cpp_capture_memory_snapshot", "pointer", []);
+    },
+    get memorySnapshotFree() {
+      return t("il2cpp_free_captured_memory_snapshot", "void", [ "pointer" ]);
+    },
+    get memorySnapshotGetClasses() {
+      return t("il2cpp_memory_snapshot_get_classes", "pointer", [ "pointer", "pointer" ]);
+    },
+    get memorySnapshotGetObjects() {
+      return t("il2cpp_memory_snapshot_get_objects", "pointer", [ "pointer", "pointer" ]);
+    },
+    get methodGetClass() {
+      return t("il2cpp_method_get_class", "pointer", [ "pointer" ]);
+    },
+    get methodGetFlags() {
+      return t("il2cpp_method_get_flags", "uint32", [ "pointer", "pointer" ]);
+    },
+    get methodGetName() {
+      return t("il2cpp_method_get_name", "pointer", [ "pointer" ]);
+    },
+    get methodGetObject() {
+      return t("il2cpp_method_get_object", "pointer", [ "pointer", "pointer" ]);
+    },
+    get methodGetParameterCount() {
+      return t("il2cpp_method_get_param_count", "uint8", [ "pointer" ]);
+    },
+    get methodGetParameterName() {
+      return t("il2cpp_method_get_param_name", "pointer", [ "pointer", "uint32" ]);
+    },
+    get methodGetParameters() {
+      return t("il2cpp_method_get_parameters", "pointer", [ "pointer", "pointer" ]);
+    },
+    get methodGetParameterType() {
+      return t("il2cpp_method_get_param", "pointer", [ "pointer", "uint32" ]);
+    },
+    get methodGetReturnType() {
+      return t("il2cpp_method_get_return_type", "pointer", [ "pointer" ]);
+    },
+    get methodIsGeneric() {
+      return t("il2cpp_method_is_generic", "bool", [ "pointer" ]);
+    },
+    get methodIsInflated() {
+      return t("il2cpp_method_is_inflated", "bool", [ "pointer" ]);
+    },
+    get methodIsInstance() {
+      return t("il2cpp_method_is_instance", "bool", [ "pointer" ]);
+    },
+    get monitorEnter() {
+      return t("il2cpp_monitor_enter", "void", [ "pointer" ]);
+    },
+    get monitorExit() {
+      return t("il2cpp_monitor_exit", "void", [ "pointer" ]);
+    },
+    get monitorPulse() {
+      return t("il2cpp_monitor_pulse", "void", [ "pointer" ]);
+    },
+    get monitorPulseAll() {
+      return t("il2cpp_monitor_pulse_all", "void", [ "pointer" ]);
+    },
+    get monitorTryEnter() {
+      return t("il2cpp_monitor_try_enter", "bool", [ "pointer", "uint32" ]);
+    },
+    get monitorTryWait() {
+      return t("il2cpp_monitor_try_wait", "bool", [ "pointer", "uint32" ]);
+    },
+    get monitorWait() {
+      return t("il2cpp_monitor_wait", "void", [ "pointer" ]);
+    },
+    get objectGetClass() {
+      return t("il2cpp_object_get_class", "pointer", [ "pointer" ]);
+    },
+    get objectGetVirtualMethod() {
+      return t("il2cpp_object_get_virtual_method", "pointer", [ "pointer", "pointer" ]);
+    },
+    get objectInitialize() {
+      return t("il2cpp_runtime_object_init_exception", "void", [ "pointer", "pointer" ]);
+    },
+    get objectNew() {
+      return t("il2cpp_object_new", "pointer", [ "pointer" ]);
+    },
+    get objectGetSize() {
+      return t("il2cpp_object_get_size", "uint32", [ "pointer" ]);
+    },
+    get objectUnbox() {
+      return t("il2cpp_object_unbox", "pointer", [ "pointer" ]);
+    },
+    get resolveInternalCall() {
+      return t("il2cpp_resolve_icall", "pointer", [ "pointer" ]);
+    },
+    get stringGetChars() {
+      return t("il2cpp_string_chars", "pointer", [ "pointer" ]);
+    },
+    get stringGetLength() {
+      return t("il2cpp_string_length", "int32", [ "pointer" ]);
+    },
+    get stringNew() {
+      return t("il2cpp_string_new", "pointer", [ "pointer" ]);
+    },
+    get valueTypeBox() {
+      return t("il2cpp_value_box", "pointer", [ "pointer", "pointer" ]);
+    },
+    get threadAttach() {
+      return t("il2cpp_thread_attach", "pointer", [ "pointer" ]);
+    },
+    get threadDetach() {
+      return t("il2cpp_thread_detach", "void", [ "pointer" ]);
+    },
+    get threadGetAttachedThreads() {
+      return t("il2cpp_thread_get_all_attached_threads", "pointer", [ "pointer" ]);
+    },
+    get threadGetCurrent() {
+      return t("il2cpp_thread_current", "pointer", []);
+    },
+    get threadIsVm() {
+      return t("il2cpp_is_vm_thread", "bool", [ "pointer" ]);
+    },
+    get typeGetClass() {
+      return t("il2cpp_class_from_type", "pointer", [ "pointer" ]);
+    },
+    get typeGetName() {
+      return t("il2cpp_type_get_name", "pointer", [ "pointer" ]);
+    },
+    get typeGetObject() {
+      return t("il2cpp_type_get_object", "pointer", [ "pointer" ]);
+    },
+    get typeGetTypeEnum() {
+      return t("il2cpp_type_get_type", "int", [ "pointer" ]);
+    }
+  }, y(e.api, l), o(e, "memorySnapshotApi", (() => new CModule("#include <stdint.h>\n#include <string.h>\n\ntypedef struct Il2CppManagedMemorySnapshot Il2CppManagedMemorySnapshot;\ntypedef struct Il2CppMetadataType Il2CppMetadataType;\n\nstruct Il2CppManagedMemorySnapshot\n{\n  struct Il2CppManagedHeap\n  {\n    uint32_t section_count;\n    void * sections;\n  } heap;\n  struct Il2CppStacks\n  {\n    uint32_t stack_count;\n    void * stacks;\n  } stacks;\n  struct Il2CppMetadataSnapshot\n  {\n    uint32_t type_count;\n    Il2CppMetadataType * types;\n  } metadata_snapshot;\n  struct Il2CppGCHandles\n  {\n    uint32_t tracked_object_count;\n    void ** pointers_to_objects;\n  } gc_handles;\n  struct Il2CppRuntimeInformation\n  {\n    uint32_t pointer_size;\n    uint32_t object_header_size;\n    uint32_t array_header_size;\n    uint32_t array_bounds_offset_in_header;\n    uint32_t array_size_offset_in_header;\n    uint32_t allocation_granularity;\n  } runtime_information;\n  void * additional_user_information;\n};\n\nstruct Il2CppMetadataType\n{\n  uint32_t flags;\n  void * fields;\n  uint32_t field_count;\n  uint32_t statics_size;\n  uint8_t * statics;\n  uint32_t base_or_element_type_index;\n  char * name;\n  const char * assembly_name;\n  uint64_t type_info_address;\n  uint32_t size;\n};\n\nuintptr_t\nil2cpp_memory_snapshot_get_classes (\n    const Il2CppManagedMemorySnapshot * snapshot, Il2CppMetadataType ** iter)\n{\n  const int zero = 0;\n  const void * null = 0;\n\n  if (iter != NULL && snapshot->metadata_snapshot.type_count > zero)\n  {\n    if (*iter == null)\n    {\n      *iter = snapshot->metadata_snapshot.types;\n      return (uintptr_t) (*iter)->type_info_address;\n    }\n    else\n    {\n      Il2CppMetadataType * metadata_type = *iter + 1;\n\n      if (metadata_type < snapshot->metadata_snapshot.types +\n                              snapshot->metadata_snapshot.type_count)\n      {\n        *iter = metadata_type;\n        return (uintptr_t) (*iter)->type_info_address;\n      }\n    }\n  }\n  return 0;\n}\n\nvoid **\nil2cpp_memory_snapshot_get_objects (\n    const Il2CppManagedMemorySnapshot * snapshot, uint32_t * size)\n{\n  *size = snapshot->gc_handles.tracked_object_count;\n  return snapshot->gc_handles.pointers_to_objects;\n}\n")), l);
 }(t || (t = {})), function(t) {
+  function n(e) {
+    const n = t.api.resolveInternalCall(Memory.allocUtf8String("UnityEngine.Application::" + e)), r = new NativeFunction(n, "pointer", []);
+    return r.isNull() ? null : new t.String(r()).asNullable()?.content ?? null;
+  }
   t.application = {
     get dataPath() {
-      const e = t.Runtime.internalCall("UnityEngine.Application::get_persistentDataPath", "pointer", []);
-      return new t.String(e()).content;
+      return n("get_persistentDataPath");
     },
     get identifier() {
-      const e = t.Runtime.internalCall("UnityEngine.Application::get_identifier", "pointer", []) ?? t.Runtime.internalCall("UnityEngine.Application::get_bundleIdentifier", "pointer", []);
-      return e ? new t.String(e()).content : null;
+      return n("get_identifier") ?? n("get_bundleIdentifier");
     },
     get version() {
-      const e = t.Runtime.internalCall("UnityEngine.Application::get_version", "pointer", []);
-      return e ? new t.String(e()).content : null;
+      return n("get_version");
     }
-  }, l(t, "unityVersion", (() => {
-    const n = t.Runtime.internalCall("UnityEngine.Application::get_unityVersion", "pointer", []);
-    if (null != n) return new t.String(n()).content;
+  }, o(t, "unityVersion", (() => {
+    const i = n("get_unityVersion");
+    if (null != i) return i;
     for (const n of t.module.enumerateRanges("r--").concat(Process.getRangeByAddress(t.module.base))) for (let {address: t} of Memory.scanSync(n.base, n.size, "45 64 69 74 6f 72 ?? 44 61 74 61 ?? 69 6c 32 63 70 70")) {
       for (;0 != t.readU8(); ) t = t.sub(1);
       const n = e.find(t.add(1).readCString());
       if (null != n) return n;
     }
-    i("couldn't determine the Unity version, please specify it manually");
-  }), o), l(t, "unityVersionIsBelow201830", (() => e.lt(t.unityVersion, "2018.3.0")), o);
+    r("couldn't determine the Unity version, please specify it manually");
+  }), l), o(t, "unityVersionIsBelow201830", (() => e.lt(t.unityVersion, "2018.3.0")), l);
 }(t || (t = {})), function(e) {
   e.dump = function(t, n) {
     t = t ?? `${e.application.identifier ?? "unknown"}_${e.application.version ?? "unknown"}.cs`;
-    const i = `${n ?? e.application.dataPath}/${t}`, r = new File(i, "w");
+    const r = `${n ?? e.application.dataPath}/${t}`, i = new File(r, "w");
     for (const t of e.domain.assemblies) {
       a(`dumping ${t.name}...`);
-      for (const e of t.image.classes) r.write(`${e}\n\n`);
+      for (const e of t.image.classes) i.write(`${e}\n\n`);
     }
-    r.flush(), r.close(), s(`dump saved to ${i}`);
+    i.flush(), i.close(), s(`dump saved to ${r}`);
   };
 }(t || (t = {})), function(e) {
   e.installExceptionListener = function(t = "current") {
-    const n = e.Api.threadCurrent();
-    return Interceptor.attach(e.module.getExportByName("__cxa_throw"), (function(i) {
-      ("current" != t || e.Api.threadCurrent().equals(n)) && a(new e.Object(i[0].readPointer()));
+    const n = e.api.threadGetCurrent();
+    return Interceptor.attach(e.module.getExportByName("__cxa_throw"), (function(r) {
+      ("current" != t || e.api.threadGetCurrent().equals(n)) && a(new e.Object(r[0].readPointer()));
     }));
   };
 }(t || (t = {})), function(e) {
@@ -746,264 +626,271 @@ function m(e) {
 }(t || (t = {})), function(t) {
   t.gc = {
     get heapSize() {
-      return t.Api.gcGetHeapSize();
+      return t.api.gcGetHeapSize();
     },
     get isEnabled() {
-      return !t.Api.gcIsDisabled();
+      return !t.api.gcIsDisabled();
     },
     get isIncremental() {
-      return !!t.Api.gcIsIncremental();
+      return !!t.api.gcIsIncremental();
     },
     get maxTimeSlice() {
-      return t.Api.gcGetMaxTimeSlice();
+      return t.api.gcGetMaxTimeSlice();
     },
     get usedHeapSize() {
-      return t.Api.gcGetUsedSize();
+      return t.api.gcGetUsedSize();
     },
     set isEnabled(e) {
-      e ? t.Api.gcEnable() : t.Api.gcDisable();
+      e ? t.api.gcEnable() : t.api.gcDisable();
     },
     set maxTimeSlice(e) {
-      t.Api.gcSetMaxTimeSlice(e);
+      t.api.gcSetMaxTimeSlice(e);
     },
     choose(n) {
-      const i = [], r = new NativeCallback(((e, n) => {
-        for (let r = 0; r < n; r++) i.push(new t.Object(e.add(r * Process.pointerSize).readPointer()));
+      const r = [], i = new NativeCallback(((e, n) => {
+        for (let i = 0; i < n; i++) r.push(new t.Object(e.add(i * Process.pointerSize).readPointer()));
       }), "void", [ "pointer", "int", "pointer" ]);
       if (e.gte(t.unityVersion, "2021.2.0")) {
         const e = new NativeCallback(((e, n) => e.isNull() || 0 != n.compare(0) ? t.alloc(n) : (t.free(e), 
         NULL)), "pointer", [ "pointer", "size_t", "pointer" ]);
         this.stopWorld();
-        const i = t.Api.livenessAllocateStruct(n, 0, r, NULL, e);
-        t.Api.livenessCalculationFromStatics(i), t.Api.livenessFinalize(i), this.startWorld(), 
-        t.Api.livenessFreeStruct(i);
+        const r = t.api.livenessAllocateStruct(n, 0, i, NULL, e);
+        t.api.livenessCalculationFromStatics(r), t.api.livenessFinalize(r), this.startWorld(), 
+        t.api.livenessFreeStruct(r);
       } else {
-        const e = new NativeCallback((() => {}), "void", []), i = t.Api.livenessCalculationBegin(n, 0, r, NULL, e, e);
-        t.Api.livenessCalculationFromStatics(i), t.Api.livenessCalculationEnd(i);
+        const e = new NativeCallback((() => {}), "void", []), r = t.api.livenessCalculationBegin(n, 0, i, NULL, e, e);
+        t.api.livenessCalculationFromStatics(r), t.api.livenessCalculationEnd(r);
       }
-      return i;
+      return r;
     },
     collect(e) {
-      t.Api.gcCollect(e < 0 ? 0 : e > 2 ? 2 : e);
+      t.api.gcCollect(e < 0 ? 0 : e > 2 ? 2 : e);
     },
     collectALittle() {
-      t.Api.gcCollectALittle();
+      t.api.gcCollectALittle();
     },
-    startWorld: () => t.Api.gcStartWorld(),
-    startIncrementalCollection: () => t.Api.gcStartIncrementalCollection(),
-    stopWorld: () => t.Api.gcStopWorld()
+    startWorld: () => t.api.gcStartWorld(),
+    startIncrementalCollection: () => t.api.gcStartIncrementalCollection(),
+    stopWorld: () => t.api.gcStopWorld()
   };
 }(t || (t = {})), function(e) {
   function t(n) {
-    const i = n.type.class.fields.filter((e => !e.isStatic));
-    return 0 == i.length ? [ n.handle.readU8() ] : i.map((e => e.withHolder(n).value)).map((n => n instanceof e.ValueType ? t(n) : n instanceof c ? n.handle : "boolean" == typeof n ? +n : n));
+    const r = n.type.class.fields.filter((e => !e.isStatic));
+    return 0 == r.length ? [ n.handle.readU8() ] : r.map((e => e.withHolder(n).value)).map((n => n instanceof e.ValueType ? t(n) : n instanceof c ? n.handle : "boolean" == typeof n ? +n : n));
   }
   e.alloc = function(t = Process.pointerSize) {
-    return e.Api.alloc(t);
+    return e.api.alloc(t);
   }, e.free = function(t) {
-    return e.Api.free(t);
+    return e.api.free(t);
   }, e.read = function(t, n) {
     switch (n.typeEnum) {
-     case 2:
+     case e.Type.enum.boolean:
       return !!t.readS8();
 
-     case 4:
+     case e.Type.enum.byte:
       return t.readS8();
 
-     case 5:
+     case e.Type.enum.unsignedByte:
       return t.readU8();
 
-     case 6:
+     case e.Type.enum.short:
       return t.readS16();
 
-     case 7:
-     case 3:
+     case e.Type.enum.unsignedShort:
       return t.readU16();
 
-     case 8:
+     case e.Type.enum.int:
       return t.readS32();
 
-     case 9:
+     case e.Type.enum.unsignedInt:
       return t.readU32();
 
-     case 10:
+     case e.Type.enum.char:
+      return t.readU16();
+
+     case e.Type.enum.long:
       return t.readS64();
 
-     case 11:
+     case e.Type.enum.unsignedLong:
       return t.readU64();
 
-     case 12:
+     case e.Type.enum.float:
       return t.readFloat();
 
-     case 13:
+     case e.Type.enum.double:
       return t.readDouble();
 
-     case 24:
-     case 25:
+     case e.Type.enum.nativePointer:
+     case e.Type.enum.unsignedNativePointer:
       return t.readPointer();
 
-     case 15:
+     case e.Type.enum.pointer:
       return new e.Pointer(t.readPointer(), n.class.baseType);
 
-     case 17:
+     case e.Type.enum.valueType:
       return new e.ValueType(t, n);
 
-     case 28:
-     case 18:
+     case e.Type.enum.object:
+     case e.Type.enum.class:
       return new e.Object(t.readPointer());
 
-     case 21:
+     case e.Type.enum.genericInstance:
       return n.class.isValueType ? new e.ValueType(t, n) : new e.Object(t.readPointer());
 
-     case 14:
+     case e.Type.enum.string:
       return new e.String(t.readPointer());
 
-     case 29:
-     case 20:
+     case e.Type.enum.array:
+     case e.Type.enum.multidimensionalArray:
       return new e.Array(t.readPointer());
     }
-    i(`read: "${n.name}" (${n.typeEnum}) has not been handled yet. Please file an issue!`);
-  }, e.write = function(t, n, r) {
-    switch (r.typeEnum) {
-     case 2:
+    r(`couldn't read the value from ${t} using an unhandled or unknown type ${n.name} (${n.typeEnum}), please file an issue`);
+  }, e.write = function(t, n, i) {
+    switch (i.typeEnum) {
+     case e.Type.enum.boolean:
       return t.writeS8(+n);
 
-     case 4:
+     case e.Type.enum.byte:
       return t.writeS8(n);
 
-     case 5:
+     case e.Type.enum.unsignedByte:
       return t.writeU8(n);
 
-     case 6:
+     case e.Type.enum.short:
       return t.writeS16(n);
 
-     case 7:
-     case 3:
+     case e.Type.enum.unsignedShort:
       return t.writeU16(n);
 
-     case 8:
+     case e.Type.enum.int:
       return t.writeS32(n);
 
-     case 9:
+     case e.Type.enum.unsignedInt:
       return t.writeU32(n);
 
-     case 10:
+     case e.Type.enum.char:
+      return t.writeU16(n);
+
+     case e.Type.enum.long:
       return t.writeS64(n);
 
-     case 11:
+     case e.Type.enum.unsignedLong:
       return t.writeU64(n);
 
-     case 12:
+     case e.Type.enum.float:
       return t.writeFloat(n);
 
-     case 13:
+     case e.Type.enum.double:
       return t.writeDouble(n);
 
-     case 24:
-     case 25:
-     case 15:
-     case 17:
-     case 14:
-     case 28:
-     case 18:
-     case 29:
-     case 20:
-     case 21:
-      return n instanceof e.ValueType ? (Memory.copy(t, n, r.class.valueSize), t) : t.writePointer(n);
+     case e.Type.enum.nativePointer:
+     case e.Type.enum.unsignedNativePointer:
+     case e.Type.enum.pointer:
+     case e.Type.enum.valueType:
+     case e.Type.enum.string:
+     case e.Type.enum.object:
+     case e.Type.enum.class:
+     case e.Type.enum.array:
+     case e.Type.enum.multidimensionalArray:
+     case e.Type.enum.genericInstance:
+      return n instanceof e.ValueType ? (Memory.copy(t, n, i.class.valueTypeSize), t) : t.writePointer(n);
     }
-    i(`write: "${r.name}" (${r.typeEnum}) has not been handled yet. Please file an issue!`);
+    r(`couldn't write value ${n} to ${t} using an unhandled or unknown type ${i.name} (${i.typeEnum}), please file an issue`);
   }, e.fromFridaValue = function(t, n) {
     if (globalThis.Array.isArray(t)) return function(t, n) {
-      function i(t, n = 0) {
-        const r = [];
+      function r(t, n = 0) {
+        const i = [];
         for (const s of t.class.fields) if (!s.isStatic) {
           const t = n + s.offset - e.Object.headerSize;
-          17 == s.type.typeEnum || 21 == s.type.typeEnum && s.type.class.isValueType ? r.push(...i(s.type, t)) : r.push([ s.type.typeEnum, t ]);
+          s.type.typeEnum == e.Type.enum.valueType || s.type.typeEnum == e.Type.enum.genericInstance && s.type.class.isValueType ? i.push(...r(s.type, t)) : i.push([ s.type.typeEnum, t ]);
         }
-        return 0 == r.length && r.push([ 5, 0 ]), r;
+        return 0 == i.length && i.push([ e.Type.enum.unsignedByte, 0 ]), i;
       }
-      const s = Memory.alloc(t.class.valueSize);
+      const s = Memory.alloc(t.class.valueTypeSize);
       n = n.flat(1 / 0);
-      const a = i(t);
-      for (let e = 0; e < n.length; e++) {
-        const t = n[e], [i, l] = a[e], o = s.add(l);
-        switch (i) {
-         case 2:
-         case 4:
-          o.writeS8(t);
+      const a = r(t);
+      for (let t = 0; t < n.length; t++) {
+        const r = n[t], [o, l] = a[t], c = s.add(l);
+        switch (o) {
+         case e.Type.enum.boolean:
+         case e.Type.enum.byte:
+          c.writeS8(r);
           break;
 
-         case 5:
-          o.writeU8(t);
+         case e.Type.enum.unsignedByte:
+          c.writeU8(r);
           break;
 
-         case 6:
-          o.writeS16(t);
+         case e.Type.enum.short:
+          c.writeS16(r);
           break;
 
-         case 7:
-         case 3:
-          o.writeU16(t);
+         case e.Type.enum.unsignedShort:
+          c.writeU16(r);
           break;
 
-         case 8:
-          o.writeS32(t);
+         case e.Type.enum.int:
+          c.writeS32(r);
           break;
 
-         case 9:
-          o.writeU32(t);
+         case e.Type.enum.unsignedInt:
+          c.writeU32(r);
           break;
 
-         case 10:
-          o.writeS64(t);
+         case e.Type.enum.char:
+          c.writeU16(r);
           break;
 
-         case 11:
-          o.writeU64(t);
+         case e.Type.enum.long:
+          c.writeS64(r);
           break;
 
-         case 12:
-          o.writeFloat(t);
+         case e.Type.enum.unsignedLong:
+          c.writeU64(r);
           break;
 
-         case 13:
-          o.writeDouble(t);
+         case e.Type.enum.float:
+          c.writeFloat(r);
           break;
 
-         case 24:
-         case 25:
-         case 15:
-         case 29:
-         case 20:
-         case 14:
-         case 28:
-         case 18:
-         case 21:
-          o.writePointer(t);
+         case e.Type.enum.double:
+          c.writeDouble(r);
+          break;
+
+         case e.Type.enum.nativePointer:
+         case e.Type.enum.unsignedNativePointer:
+         case e.Type.enum.pointer:
+         case e.Type.enum.array:
+         case e.Type.enum.multidimensionalArray:
+         case e.Type.enum.string:
+         case e.Type.enum.object:
+         case e.Type.enum.class:
+         case e.Type.enum.genericInstance:
+          c.writePointer(r);
           break;
 
          default:
-          r(`arrayToValueType: defaulting ${i} to pointer`), o.writePointer(t);
+          i(`arrayToValueType: defaulting ${o} to pointer`), c.writePointer(r);
         }
       }
       return new e.ValueType(s, t);
     }(n, t);
-    if (!(t instanceof NativePointer)) return 2 == n.typeEnum ? !!t : t;
+    if (!(t instanceof NativePointer)) return n.typeEnum == e.Type.enum.boolean ? !!t : t;
     if (n.isByReference) return new e.Reference(t, n);
     switch (n.typeEnum) {
-     case 15:
+     case e.Type.enum.pointer:
       return new e.Pointer(t, n.class.baseType);
 
-     case 14:
+     case e.Type.enum.string:
       return new e.String(t);
 
-     case 18:
-     case 21:
-     case 28:
+     case e.Type.enum.class:
+     case e.Type.enum.genericInstance:
+     case e.Type.enum.object:
       return new e.Object(t);
 
-     case 29:
-     case 20:
+     case e.Type.enum.array:
+     case e.Type.enum.multidimensionalArray:
       return new e.Array(t);
 
      default:
@@ -1013,7 +900,7 @@ function m(e) {
     return "boolean" == typeof n ? +n : n instanceof e.ValueType ? t(n) : n;
   };
 }(t || (t = {})), function(e) {
-  l(e, "moduleName", (() => {
+  o(e, "moduleName", (() => {
     switch (Process.platform) {
      case "linux":
       try {
@@ -1033,63 +920,205 @@ function m(e) {
         return "GameAssembly.dylib";
       }
     }
-    i(`${Process.platform} is not supported yet`);
-  })), l(e, "module", (() => Process.getModuleByName(e.moduleName)), o), e.initialize = async function() {
-    if ("darwin" == Process.platform) {
-      let t = Process.findModuleByAddress(Module.findExportByName(null, "il2cpp_init") ?? NULL)?.name;
-      null == t && (t = await d("UnityFramework", "GameAssembly.dylib")), Reflect.defineProperty(e, "moduleName", {
-        value: t
-      });
-    } else await d(e.moduleName);
-    e.Api.getCorlib().isNull() && await new Promise((t => {
-      const n = Interceptor.attach(e.Api.init, {
+    r(`${Process.platform} is not supported yet`);
+  })), o(e, "module", (() => Process.getModuleByName(e.moduleName)), l), e.initialize = async function(t = !1) {
+    return "darwin" == Process.platform ? Reflect.defineProperty(e, "moduleName", {
+      value: DebugSymbol.fromName("il2cpp_init").moduleName ?? await u("UnityFramework", "GameAssembly.dylib")
+    }) : await u(e.moduleName), !!e.api.getCorlib().isNull() && await new Promise((n => {
+      const r = Interceptor.attach(e.api.initialize, {
         onLeave() {
-          n.detach(), setImmediate(t);
+          r.detach(), t ? n(!0) : setImmediate((() => n(!1)));
         }
       });
     }));
   };
 }(t || (t = {})), function(e) {
-  e.perform = async function(t) {
-    await e.initialize();
-    let n = e.currentThread;
-    const i = null == n;
-    null == n && (n = e.domain.attach());
+  e.perform = async function t(n, r = "bind") {
     try {
-      const e = t();
-      return e instanceof Promise ? await e : e;
+      const i = await e.initialize("main" == r);
+      if ("main" == r && !i) return t((() => e.mainThread.schedule(n)), "free");
+      let s = e.currentThread;
+      const a = null == s;
+      s || (s = e.domain.attach());
+      const o = n();
+      return a && ("free" == r ? s.detach() : "bind" == r && Script.bindWeak(globalThis, (() => s.detach()))), 
+      o instanceof Promise ? await o : o;
     } catch (e) {
       return Script.nextTick((e => {
         throw e;
       }), e), Promise.reject(e);
-    } finally {
-      i && n.detach();
     }
   };
 }(t || (t = {})), function(e) {
-  class t {
-    static get allocationGranularity() {
-      return this.information[5];
+  e.Tracer = class {
+    #e={
+      depth: 0,
+      buffer: [],
+      history: new Set,
+      flush: () => {
+        if (0 == this.#e.depth) {
+          const e = `\n${this.#e.buffer.join("\n")}\n`;
+          if (this.#t) a(e); else {
+            const t = function(e) {
+              let t = 3735928559, n = 1103547991;
+              for (let r, i = 0; i < e.length; i++) r = e.charCodeAt(i), t = Math.imul(t ^ r, 2654435761), 
+              n = Math.imul(n ^ r, 1597334677);
+              return t = Math.imul(t ^ t >>> 16, 2246822507), t ^= Math.imul(n ^ n >>> 13, 3266489909), 
+              n = Math.imul(n ^ n >>> 16, 2246822507), n ^= Math.imul(t ^ t >>> 13, 3266489909), 
+              4294967296 * (2097151 & n) + (t >>> 0);
+            }(e);
+            this.#e.history.has(t) || (this.#e.history.add(t), a(e));
+          }
+          this.#e.buffer.length = 0;
+        }
+      }
+    };
+    #n=e.mainThread.id;
+    #t=!1;
+    #r;
+    #i=[];
+    #s;
+    #a;
+    #o;
+    #l;
+    #c;
+    #p;
+    #u;
+    #d;
+    constructor(e) {
+      this.#r = e;
     }
-    static get information() {
-      return e.memorySnapshot(e.Api.memorySnapshotGetRuntimeInformation);
+    thread(e) {
+      return this.#n = e.id, this;
     }
-    static get pointerSize() {
-      return this.information[0];
+    verbose(e) {
+      return this.#t = e, this;
     }
-    static internalCall(t, n, i) {
-      const r = e.Api.resolveInternalCall(Memory.allocUtf8String(t));
-      return r.isNull() ? null : new NativeFunction(r, n, i);
+    domain() {
+      return this.#s = e.domain, this;
     }
-  }
-  n([ o ], t, "information", null), e.Runtime = t;
+    assemblies(...e) {
+      return this.#a = e, this;
+    }
+    classes(...e) {
+      return this.#o = e, this;
+    }
+    methods(...e) {
+      return this.#l = e, this;
+    }
+    filterAssemblies(e) {
+      return this.#c = e, this;
+    }
+    filterClasses(e) {
+      return this.#p = e, this;
+    }
+    filterMethods(e) {
+      return this.#u = e, this;
+    }
+    filterParameters(e) {
+      return this.#d = e, this;
+    }
+    and() {
+      const e = e => {
+        if (null != this.#d) {
+          for (const t of e.parameters) if (this.#d(t)) {
+            this.#i.push(e);
+            break;
+          }
+        } else this.#i.push(e);
+      }, t = t => {
+        for (const n of t) e(n);
+      }, n = n => {
+        if (null != this.#u) for (const t of n.methods) this.#u(t) && e(t); else t(n.methods);
+      }, r = e => {
+        for (const t of e) n(t);
+      }, i = e => {
+        if (null != this.#p) for (const t of e.image.classes) this.#p(t) && n(t); else r(e.image.classes);
+      }, s = e => {
+        for (const t of e) i(t);
+      };
+      return this.#l ? t(this.#l) : this.#o ? r(this.#o) : this.#a ? s(this.#a) : this.#s && (e => {
+        if (null != this.#c) for (const t of e.assemblies) this.#c(t) && i(t); else s(e.assemblies);
+      })(this.#s), this.#a = void 0, this.#o = void 0, this.#l = void 0, this.#c = void 0, 
+      this.#p = void 0, this.#u = void 0, this.#d = void 0, this;
+    }
+    attach() {
+      for (const e of this.#i) if (!e.virtualAddress.isNull()) try {
+        this.#r(e, this.#e, this.#n);
+      } catch (e) {
+        switch (e.message) {
+         case /unable to intercept function at \w+; please file a bug/.exec(e.message)?.input:
+         case "already replaced this function":
+          break;
+
+         default:
+          throw e;
+        }
+      }
+    }
+  }, e.trace = function(t = !1) {
+    return new e.Tracer(t ? (t, n, r) => {
+      const i = t.relativeVirtualAddress.toString(16).padStart(8, "0"), s = +!t.isStatic | +e.unityVersionIsBelow201830;
+      t.revert();
+      const a = new NativeCallback((function(...a) {
+        if (this.threadId == r) {
+          const r = t.isStatic ? void 0 : new e.Parameter("this", -1, t.class.type), o = r ? [ r ].concat(t.parameters) : t.parameters;
+          n.buffer.push(`[2m0x${i}[0m ${"│ ".repeat(n.depth++)}┌─[35m${t.class.type.name}::[1m${t.name}[0m[0m(${o.map((t => `[32m${t.name}[0m = [31m${e.fromFridaValue(a[t.position + s], t.type)}[0m`)).join(", ")})`);
+        }
+        const o = t.nativeFunction(...a);
+        return this.threadId == r && (n.buffer.push(`[2m0x${i}[0m ${"│ ".repeat(--n.depth)}└─[33m${t.class.type.name}::[1m${t.name}[0m[0m${null == o ? "" : ` = [36m${e.fromFridaValue(o, t.returnType)}`}[0m`), 
+        n.flush()), o;
+      }), t.returnType.fridaAlias, t.fridaSignature);
+      Interceptor.replace(t.virtualAddress, a);
+    } : (e, t, n) => {
+      const r = e.relativeVirtualAddress.toString(16).padStart(8, "0");
+      Interceptor.attach(e.virtualAddress, {
+        onEnter() {
+          this.threadId == n && t.buffer.push(`[2m0x${r}[0m ${"│ ".repeat(t.depth++)}┌─[35m${e.class.type.name}::[1m${e.name}[0m[0m`);
+        },
+        onLeave() {
+          this.threadId == n && (t.buffer.push(`[2m0x${r}[0m ${"│ ".repeat(--t.depth)}└─[33m${e.class.type.name}::[1m${e.name}[0m[0m`), 
+          t.flush());
+        }
+      });
+    });
+  }, e.backtrace = function(t) {
+    const n = e.domain.assemblies.flatMap((e => e.image.classes.flatMap((e => e.methods.filter((e => !e.virtualAddress.isNull())))))).sort(((e, t) => e.virtualAddress.compare(t.virtualAddress))), r = e => {
+      let t = 0, r = n.length - 1;
+      for (;t <= r; ) {
+        const i = Math.floor((t + r) / 2), s = n[i].virtualAddress.compare(e);
+        if (0 == s) return n[i];
+        s > 0 ? r = i - 1 : t = i + 1;
+      }
+      return n[r];
+    };
+    return new e.Tracer(((n, i, s) => {
+      Interceptor.attach(n.virtualAddress, (function() {
+        if (this.threadId == s) {
+          const s = globalThis.Thread.backtrace(this.context, t);
+          s.unshift(n.virtualAddress);
+          for (const t of s) if (t.compare(e.module.base) > 0 && t.compare(e.module.base.add(e.module.size)) < 0) {
+            const e = r(t);
+            if (e) {
+              const n = t.sub(e.virtualAddress);
+              n.compare(4095) < 0 && i.buffer.push(`[2m0x${e.relativeVirtualAddress.toString(16).padStart(8, "0")}[0m[2m+0x${n.toString(16).padStart(3, "0")}[0m ${e.class.type.name}::[1m${e.name}[0m`);
+            }
+          }
+          i.flush();
+        }
+      }));
+    }));
+  };
 }(t || (t = {})), function(e) {
   class t extends c {
     static get headerSize() {
       return e.corlib.class("System.Array").instanceSize;
     }
     get elements() {
-      return new e.Pointer(e.Api.arrayGetElements(this), this.elementType);
+      const t = e.string("vfsfitvnm"), n = t.object.method("Split", 1).invoke(NULL).handle.offsetOf((e => e.readPointer().equals(t.handle))) ?? r("couldn't find the elements offset in the native array struct");
+      return o(e.Array.prototype, "elements", (function() {
+        return new e.Pointer(this.handle.add(n), this.elementType);
+      }), l), this.elements;
     }
     get elementSize() {
       return this.elementType.class.arrayElementSize;
@@ -1098,17 +1127,17 @@ function m(e) {
       return this.object.class.type.class.baseType;
     }
     get length() {
-      return e.Api.arrayGetLength(this);
+      return e.api.arrayGetLength(this);
     }
     get object() {
       return new e.Object(this);
     }
     get(e) {
-      return (e < 0 || e >= this.length) && i(`cannot get element at index ${e}: array length is ${this.length}`), 
+      return (e < 0 || e >= this.length) && r(`cannot get element at index ${e} as the array length is ${this.length}`), 
       this.elements.get(e);
     }
     set(e, t) {
-      (e < 0 || e >= this.length) && i(`cannot get element at index ${e}: array length is ${this.length}`), 
+      (e < 0 || e >= this.length) && r(`cannot set element at index ${e} as the array length is ${this.length}`), 
       this.elements.set(e, t);
     }
     toString() {
@@ -1118,58 +1147,68 @@ function m(e) {
       for (let e = 0; e < this.length; e++) yield this.elements.get(e);
     }
   }
-  n([ o ], t.prototype, "elements", null), n([ o ], t.prototype, "elementSize", null), 
-  n([ o ], t.prototype, "elementType", null), n([ o ], t.prototype, "length", null), 
-  n([ o ], t.prototype, "object", null), n([ o ], t, "headerSize", null), e.Array = t, 
-  e.array = function(t, n) {
-    const i = "number" == typeof n ? n : n.length, r = new e.Array(e.Api.arrayNew(t, i));
-    return globalThis.Array.isArray(n) && r.elements.write(n), r;
+  n([ l ], t.prototype, "elementSize", null), n([ l ], t.prototype, "elementType", null), 
+  n([ l ], t.prototype, "length", null), n([ l ], t.prototype, "object", null), n([ l ], t, "headerSize", null), 
+  e.Array = t, e.array = function(t, n) {
+    const r = "number" == typeof n ? n : n.length, i = new e.Array(e.api.arrayNew(t, r));
+    return globalThis.Array.isArray(n) && i.elements.write(n), i;
   };
 }(t || (t = {})), function(e) {
-  let t = class extends p {
+  let t = class extends c {
     get image() {
-      return new e.Image(e.Api.assemblyGetImage(this));
+      let t = function() {
+        return new e.Image(e.api.assemblyGetImage(this));
+      };
+      try {
+        e.api.assemblyGetImage;
+      } catch (n) {
+        t = function() {
+          return new e.Image(this.object.method("GetType", 1).invoke(e.string("<Module>")).method("get_Module").invoke().field("_impl").value);
+        };
+      }
+      return o(e.Assembly.prototype, "image", t, l), this.image;
     }
     get name() {
       return this.image.name.replace(".dll", "");
     }
     get object() {
-      return e.corlib.class("System.Reflection.Assembly").method("Load").invoke(e.string(this.name));
+      for (const t of e.domain.object.method("GetAssemblies", 1).invoke(!1)) if (t.field("_mono_assembly").value.equals(this)) return t;
+      r("couldn't find the object of the native assembly struct");
     }
   };
-  n([ o ], t.prototype, "image", null), n([ o ], t.prototype, "name", null), n([ o ], t.prototype, "object", null), 
-  t = n([ m ], t), e.Assembly = t;
+  n([ l ], t.prototype, "name", null), n([ l ], t.prototype, "object", null), t = n([ h ], t), 
+  e.Assembly = t;
 }(t || (t = {})), function(e) {
-  let t = class extends p {
+  let t = class extends c {
     get actualInstanceSize() {
-      return e.Api.classGetActualInstanceSize(this);
+      const t = e.corlib.class("System.String"), n = t.handle.offsetOf((e => e.readInt() == t.instanceSize - 2)) ?? r("couldn't find the actual instance size offset in the native class struct");
+      return o(e.Class.prototype, "actualInstanceSize", (function() {
+        return this.handle.add(n).readS32();
+      }), l), this.actualInstanceSize;
     }
     get arrayClass() {
-      return new e.Class(e.Api.classGetArrayClass(this, 1));
+      return new e.Class(e.api.classGetArrayClass(this, 1));
     }
     get arrayElementSize() {
-      return e.Api.classGetArrayElementSize(this);
+      return e.api.classGetArrayElementSize(this);
     }
     get assemblyName() {
-      return e.Api.classGetAssemblyName(this).readUtf8String();
+      return e.api.classGetAssemblyName(this).readUtf8String();
     }
     get declaringClass() {
-      const t = e.Api.classGetDeclaringType(this);
-      return t.isNull() ? null : new e.Class(t);
+      return new e.Class(e.api.classGetDeclaringType(this)).asNullable();
     }
     get baseType() {
-      const t = e.Api.classGetBaseType(this);
-      return t.isNull() ? null : new e.Type(t);
+      return new e.Type(e.api.classGetBaseType(this)).asNullable();
     }
     get elementClass() {
-      const t = e.Api.classGetElementClass(this);
-      return t.isNull() ? null : new e.Class(t);
+      return new e.Class(e.api.classGetElementClass(this)).asNullable();
     }
     get fields() {
-      return h((t => e.Api.classGetFields(this, t))).map((t => new e.Field(t)));
+      return d((t => e.api.classGetFields(this, t))).map((t => new e.Field(t)));
     }
     get flags() {
-      return e.Api.classGetFlags(this);
+      return e.api.classGetFlags(this);
     }
     get fullName() {
       return this.namespace ? `${this.namespace}.${this.name}` : this.name;
@@ -1178,110 +1217,117 @@ function m(e) {
       return this.isGeneric ? this.type.object.method("GetGenericArguments").invoke().length : 0;
     }
     get hasReferences() {
-      return !!e.Api.classHasReferences(this);
+      return !!e.api.classHasReferences(this);
     }
     get hasStaticConstructor() {
       const e = this.tryMethod(".cctor");
       return null != e && !e.virtualAddress.isNull();
     }
     get image() {
-      return new e.Image(e.Api.classGetImage(this));
+      return new e.Image(e.api.classGetImage(this));
     }
     get instanceSize() {
-      return e.Api.classGetInstanceSize(this);
+      return e.api.classGetInstanceSize(this);
     }
     get isAbstract() {
-      return !!e.Api.classIsAbstract(this);
+      return !!e.api.classIsAbstract(this);
     }
     get isBlittable() {
-      return !!e.Api.classIsBlittable(this);
+      return !!e.api.classIsBlittable(this);
     }
     get isEnum() {
-      return !!e.Api.classIsEnum(this);
+      return !!e.api.classIsEnum(this);
     }
     get isGeneric() {
-      return !!e.Api.classIsGeneric(this);
+      return !!e.api.classIsGeneric(this);
     }
     get isInflated() {
-      return !!e.Api.classIsInflated(this);
+      return !!e.api.classIsInflated(this);
     }
     get isInterface() {
-      return !!e.Api.classIsInterface(this);
+      return !!e.api.classIsInterface(this);
     }
     get isValueType() {
-      return !!e.Api.classIsValueType(this);
+      return !!e.api.classIsValueType(this);
     }
     get interfaces() {
-      return h((t => e.Api.classGetInterfaces(this, t))).map((t => new e.Class(t)));
+      return d((t => e.api.classGetInterfaces(this, t))).map((t => new e.Class(t)));
     }
     get methods() {
-      return h((t => e.Api.classGetMethods(this, t))).map((t => new e.Method(t)));
+      return d((t => e.api.classGetMethods(this, t))).map((t => new e.Method(t)));
     }
     get name() {
-      return e.Api.classGetName(this).readUtf8String();
+      return e.api.classGetName(this).readUtf8String();
     }
     get namespace() {
-      return e.Api.classGetNamespace(this).readUtf8String();
+      return e.api.classGetNamespace(this).readUtf8String();
     }
     get nestedClasses() {
-      return h((t => e.Api.classGetNestedClasses(this, t))).map((t => new e.Class(t)));
+      return d((t => e.api.classGetNestedClasses(this, t))).map((t => new e.Class(t)));
     }
     get parent() {
-      const t = e.Api.classGetParent(this);
-      return t.isNull() ? null : new e.Class(t);
+      return new e.Class(e.api.classGetParent(this)).asNullable();
     }
     get rank() {
-      return e.Api.classGetRank(this);
+      let e = 0;
+      const t = this.name;
+      for (let n = this.name.length - 1; n > 0; n--) {
+        const r = t[n];
+        if ("]" == r) e++; else {
+          if ("[" == r || 0 == e) break;
+          if ("," != r) break;
+          e++;
+        }
+      }
+      return e;
     }
     get staticFieldsData() {
-      return e.Api.classGetStaticFieldData(this);
+      return e.api.classGetStaticFieldData(this);
     }
-    get valueSize() {
-      return e.Api.classGetValueSize(this, NULL);
+    get valueTypeSize() {
+      return e.api.classGetValueTypeSize(this, NULL);
     }
     get type() {
-      return new e.Type(e.Api.classGetType(this));
+      return new e.Type(e.api.classGetType(this));
     }
     alloc() {
-      return new e.Object(e.Api.objectNew(this));
+      return new e.Object(e.api.objectNew(this));
     }
     field(e) {
-      return this.tryField(e) ?? i(`couldn't find field ${e} in class ${this.type.name}`);
+      return this.tryField(e) ?? r(`couldn't find field ${e} in class ${this.type.name}`);
     }
     inflate(...t) {
-      this.isGeneric || i(`cannot inflate class ${this.type.name}: it has no generic parameters`), 
-      this.genericParameterCount != t.length && i(`cannot inflate class ${this.type.name}: it needs ${this.genericParameterCount} generic parameter(s), not ${t.length}`);
-      const n = t.map((e => e.type.object)), r = e.array(e.corlib.class("System.Type"), n), s = this.type.object.method("MakeGenericType", 1).invoke(r);
-      return new e.Class(e.Api.classFromSystemType(s));
+      this.isGeneric || r(`cannot inflate class ${this.type.name} as it has no generic parameters`), 
+      this.genericParameterCount != t.length && r(`cannot inflate class ${this.type.name} as it needs ${this.genericParameterCount} generic parameter(s), not ${t.length}`);
+      const n = t.map((e => e.type.object)), i = e.array(e.corlib.class("System.Type"), n), s = this.type.object.method("MakeGenericType", 1).invoke(i);
+      return new e.Class(e.api.classFromObject(s));
     }
     initialize() {
-      e.Api.classInit(this);
+      return e.api.classInitialize(this), this;
     }
     isAssignableFrom(t) {
-      return !!e.Api.classIsAssignableFrom(this, t);
+      return !!e.api.classIsAssignableFrom(this, t);
     }
     isSubclassOf(t, n) {
-      return !!e.Api.classIsSubclassOf(this, t, +n);
+      return !!e.api.classIsSubclassOf(this, t, +n);
     }
     method(e, t = -1) {
-      return this.tryMethod(e, t) ?? i(`couldn't find method ${e} in class ${this.type.name}`);
+      return this.tryMethod(e, t) ?? r(`couldn't find method ${e} in class ${this.type.name}`);
     }
     nested(e) {
-      return this.tryNested(e) ?? i(`couldn't find nested class ${e} in class ${this.type.name}`);
+      return this.tryNested(e) ?? r(`couldn't find nested class ${e} in class ${this.type.name}`);
     }
     new() {
       const t = this.alloc(), n = Memory.alloc(Process.pointerSize);
-      e.Api.objectInit(t, n);
-      const r = n.readPointer();
-      return r.isNull() || i(new e.Object(r).toString()), t;
+      e.api.objectInitialize(t, n);
+      const i = n.readPointer();
+      return i.isNull() || r(new e.Object(i).toString()), t;
     }
     tryField(t) {
-      const n = e.Api.classGetFieldFromName(this, Memory.allocUtf8String(t));
-      return n.isNull() ? null : new e.Field(n);
+      return new e.Field(e.api.classGetFieldFromName(this, Memory.allocUtf8String(t))).asNullable();
     }
     tryMethod(t, n = -1) {
-      const i = e.Api.classGetMethodFromName(this, Memory.allocUtf8String(t), n);
-      return i.isNull() ? null : new e.Method(i);
+      return new e.Method(e.api.classGetMethodFromName(this, Memory.allocUtf8String(t), n)).asNullable();
     }
     tryNested(e) {
       return this.nestedClasses.find((t => t.name == e));
@@ -1292,40 +1338,39 @@ function m(e) {
     }
     static enumerate(t) {
       const n = new NativeCallback((n => t(new e.Class(n))), "void", [ "pointer", "pointer" ]);
-      return e.Api.classForEach(n, NULL);
+      return e.api.classForEach(n, NULL);
     }
   };
-  n([ o ], t.prototype, "actualInstanceSize", null), n([ o ], t.prototype, "arrayClass", null), 
-  n([ o ], t.prototype, "arrayElementSize", null), n([ o ], t.prototype, "assemblyName", null), 
-  n([ o ], t.prototype, "declaringClass", null), n([ o ], t.prototype, "baseType", null), 
-  n([ o ], t.prototype, "elementClass", null), n([ o ], t.prototype, "fields", null), 
-  n([ o ], t.prototype, "flags", null), n([ o ], t.prototype, "fullName", null), n([ o ], t.prototype, "genericParameterCount", null), 
-  n([ o ], t.prototype, "hasReferences", null), n([ o ], t.prototype, "hasStaticConstructor", null), 
-  n([ o ], t.prototype, "image", null), n([ o ], t.prototype, "instanceSize", null), 
-  n([ o ], t.prototype, "isAbstract", null), n([ o ], t.prototype, "isBlittable", null), 
-  n([ o ], t.prototype, "isEnum", null), n([ o ], t.prototype, "isGeneric", null), 
-  n([ o ], t.prototype, "isInflated", null), n([ o ], t.prototype, "isInterface", null), 
-  n([ o ], t.prototype, "isValueType", null), n([ o ], t.prototype, "interfaces", null), 
-  n([ o ], t.prototype, "methods", null), n([ o ], t.prototype, "name", null), n([ o ], t.prototype, "namespace", null), 
-  n([ o ], t.prototype, "nestedClasses", null), n([ o ], t.prototype, "parent", null), 
-  n([ o ], t.prototype, "rank", null), n([ o ], t.prototype, "staticFieldsData", null), 
-  n([ o ], t.prototype, "valueSize", null), n([ o ], t.prototype, "type", null), t = n([ m ], t), 
-  e.Class = t, e._delegateNativeCallbacks = {};
+  n([ l ], t.prototype, "arrayClass", null), n([ l ], t.prototype, "arrayElementSize", null), 
+  n([ l ], t.prototype, "assemblyName", null), n([ l ], t.prototype, "declaringClass", null), 
+  n([ l ], t.prototype, "baseType", null), n([ l ], t.prototype, "elementClass", null), 
+  n([ l ], t.prototype, "fields", null), n([ l ], t.prototype, "flags", null), n([ l ], t.prototype, "fullName", null), 
+  n([ l ], t.prototype, "genericParameterCount", null), n([ l ], t.prototype, "hasReferences", null), 
+  n([ l ], t.prototype, "hasStaticConstructor", null), n([ l ], t.prototype, "image", null), 
+  n([ l ], t.prototype, "instanceSize", null), n([ l ], t.prototype, "isAbstract", null), 
+  n([ l ], t.prototype, "isBlittable", null), n([ l ], t.prototype, "isEnum", null), 
+  n([ l ], t.prototype, "isGeneric", null), n([ l ], t.prototype, "isInflated", null), 
+  n([ l ], t.prototype, "isInterface", null), n([ l ], t.prototype, "isValueType", null), 
+  n([ l ], t.prototype, "interfaces", null), n([ l ], t.prototype, "methods", null), 
+  n([ l ], t.prototype, "name", null), n([ l ], t.prototype, "namespace", null), n([ l ], t.prototype, "nestedClasses", null), 
+  n([ l ], t.prototype, "parent", null), n([ l ], t.prototype, "rank", null), n([ l ], t.prototype, "staticFieldsData", null), 
+  n([ l ], t.prototype, "valueTypeSize", null), n([ l ], t.prototype, "type", null), 
+  t = n([ h ], t), e.Class = t;
 }(t || (t = {})), function(e) {
   e.delegate = function(t, n) {
-    const r = e.corlib.class("System.Delegate"), s = e.corlib.class("System.MulticastDelegate");
-    r.isAssignableFrom(t) || i(`cannot create a delegate for ${t.type.name} as it's a non-delegate class`), 
-    (t.equals(r) || t.equals(s)) && i(`cannot create a delegate for neither ${r.type.name} nor ${s.type.name}, use a subclass instead`);
-    const a = t.alloc(), l = a.handle.toString(), o = a.tryMethod("Invoke") ?? i(`cannot create a delegate for ${t.type.name}, there is no Invoke method`);
-    a.method(".ctor").invoke(a, o.handle);
-    const c = o.wrap(((...t) => (delete e._delegateNativeCallbacks[l], n(...t))));
-    return a.field("method_ptr").value = c, a.field("invoke_impl").value = c, e._delegateNativeCallbacks[l] = c, 
+    const i = e.corlib.class("System.Delegate"), s = e.corlib.class("System.MulticastDelegate");
+    i.isAssignableFrom(t) || r(`cannot create a delegate for ${t.type.name} as it's a non-delegate class`), 
+    (t.equals(i) || t.equals(s)) && r(`cannot create a delegate for neither ${i.type.name} nor ${s.type.name}, use a subclass instead`);
+    const a = t.alloc(), o = a.handle.toString(), l = a.tryMethod("Invoke") ?? r(`cannot create a delegate for ${t.type.name}, there is no Invoke method`);
+    a.method(".ctor").invoke(a, l.handle);
+    const c = l.wrap(n);
+    return a.field("method_ptr").value = c, a.field("invoke_impl").value = c, e._callbacksToKeepAlive[o] = c, 
     a;
-  };
+  }, e._callbacksToKeepAlive = {};
 }(t || (t = {})), function(e) {
-  let t = class extends p {
+  let t = class extends c {
     get assemblies() {
-      let t = _((t => e.Api.domainGetAssemblies(this, t)));
+      let t = m((t => e.api.domainGetAssemblies(this, t)));
       if (0 == t.length) {
         const e = this.object.method("GetAssemblies").overload().invoke();
         t = globalThis.Array.from(e).map((e => e.field("_mono_assembly").value));
@@ -1333,74 +1378,97 @@ function m(e) {
       return t.map((t => new e.Assembly(t)));
     }
     get object() {
-      return new e.Object(e.Api.domainGetObject());
+      return e.corlib.class("System.AppDomain").method("get_CurrentDomain").invoke();
     }
     assembly(e) {
-      return this.tryAssembly(e) ?? i(`couldn't find assembly ${e}`);
+      return this.tryAssembly(e) ?? r(`couldn't find assembly ${e}`);
     }
     attach() {
-      return new e.Thread(e.Api.threadAttach(this));
+      return new e.Thread(e.api.threadAttach(this));
     }
     tryAssembly(t) {
-      const n = e.Api.domainAssemblyOpen(this, Memory.allocUtf8String(t));
-      return n.isNull() ? null : new e.Assembly(n);
+      return new e.Assembly(e.api.domainGetAssemblyFromName(this, Memory.allocUtf8String(t))).asNullable();
     }
   };
-  n([ o ], t.prototype, "assemblies", null), n([ o ], t.prototype, "object", null), 
-  t = n([ m ], t), e.Domain = t, l(e, "domain", (() => new e.Domain(e.Api.domainGet())), o);
+  n([ l ], t.prototype, "assemblies", null), n([ l ], t.prototype, "object", null), 
+  t = n([ h ], t), e.Domain = t, o(e, "domain", (() => new e.Domain(e.api.domainGet())), l);
 }(t || (t = {})), function(e) {
-  class t extends p {
+  class t extends c {
     get class() {
-      return new e.Class(e.Api.fieldGetClass(this));
+      return new e.Class(e.api.fieldGetClass(this));
     }
     get flags() {
-      return e.Api.fieldGetFlags(this);
+      return e.api.fieldGetFlags(this);
     }
     get isLiteral() {
-      return !!e.Api.fieldIsLiteral(this);
+      return 0 != (64 & this.flags);
     }
     get isStatic() {
-      return !!e.Api.fieldIsStatic(this);
+      return 0 != (16 & this.flags);
     }
     get isThreadStatic() {
-      return !!e.Api.fieldIsThreadStatic(this);
+      const t = e.corlib.class("System.AppDomain").field("type_resolve_in_progress").offset;
+      return o(e.Field.prototype, "isThreadStatic", (function() {
+        return this.offset == t;
+      }), l), this.isThreadStatic;
     }
     get modifier() {
-      return e.Api.fieldGetModifier(this).readUtf8String();
+      switch (7 & this.flags) {
+       case 1:
+        return "private";
+
+       case 2:
+        return "private protected";
+
+       case 3:
+        return "internal";
+
+       case 4:
+        return "protected";
+
+       case 5:
+        return "protected internal";
+
+       case 6:
+        return "public";
+      }
     }
     get name() {
-      return e.Api.fieldGetName(this).readUtf8String();
+      return e.api.fieldGetName(this).readUtf8String();
     }
     get offset() {
-      return e.Api.fieldGetOffset(this);
+      return e.api.fieldGetOffset(this);
     }
     get type() {
-      return new e.Type(e.Api.fieldGetType(this));
+      return new e.Type(e.api.fieldGetType(this));
     }
     get value() {
+      this.isStatic || r(`cannot access instance field ${this.class.type.name}::${this.name} from a class, use an object instead`);
       const t = Memory.alloc(Process.pointerSize);
-      return e.Api.fieldGetStaticValue(this.handle, t), e.read(t, this.type);
+      return e.api.fieldGetStaticValue(this.handle, t), e.read(t, this.type);
     }
     set value(t) {
-      (this.isThreadStatic || this.isLiteral) && i(`cannot modify the value of field ${this.name}: is thread static or literal`);
+      this.isStatic || r(`cannot access instance field ${this.class.type.name}::${this.name} from a class, use an object instead`), 
+      (this.isThreadStatic || this.isLiteral) && r(`cannot write the value of field ${this.name} as it's thread static or literal`);
       const n = Memory.alloc(Process.pointerSize);
-      e.write(n, t, this.type), e.Api.fieldSetStaticValue(this.handle, n);
+      e.write(n, t, this.type), e.api.fieldSetStaticValue(this.handle, n);
     }
     toString() {
       return `${this.isThreadStatic ? "[ThreadStatic] " : ""}${this.isStatic ? "static " : ""}${this.type.name} ${this.name}${this.isLiteral ? ` = ${this.type.class.isEnum ? e.read(this.value.handle, this.type.class.baseType) : this.value}` : ""};${this.isThreadStatic || this.isLiteral ? "" : ` // 0x${this.offset.toString(16)}`}`;
     }
     withHolder(t) {
+      this.isStatic && r(`cannot access static field ${this.class.type.name}::${this.name} from an object, use a class instead`);
       let n = t.handle.add(this.offset);
       return t instanceof e.ValueType && (n = n.sub(e.Object.headerSize)), new Proxy(this, {
-        get: (t, i) => "value" == i ? e.read(n, t.type) : Reflect.get(t, i),
-        set: (t, i, r) => "value" == i ? (e.write(n, r, t.type), !0) : Reflect.set(t, i, r)
+        get: (t, r) => "value" == r ? e.read(n, t.type) : Reflect.get(t, r),
+        set: (t, r, i) => "value" == r ? (e.write(n, i, t.type), !0) : Reflect.set(t, r, i)
       });
     }
   }
-  n([ o ], t.prototype, "class", null), n([ o ], t.prototype, "flags", null), n([ o ], t.prototype, "isLiteral", null), 
-  n([ o ], t.prototype, "isStatic", null), n([ o ], t.prototype, "isThreadStatic", null), 
-  n([ o ], t.prototype, "modifier", null), n([ o ], t.prototype, "name", null), n([ o ], t.prototype, "offset", null), 
-  n([ o ], t.prototype, "type", null), e.Field = t;
+  n([ l ], t.prototype, "class", null), n([ l ], t.prototype, "flags", null), n([ l ], t.prototype, "isLiteral", null), 
+  n([ l ], t.prototype, "isStatic", null), n([ l ], t.prototype, "isThreadStatic", null), 
+  n([ l ], t.prototype, "modifier", null), n([ l ], t.prototype, "name", null), n([ l ], t.prototype, "offset", null), 
+  n([ l ], t.prototype, "type", null), e.Field = t;
 }(t || (t = {})), function(e) {
   e.GCHandle = class {
     handle;
@@ -1408,76 +1476,75 @@ function m(e) {
       this.handle = e;
     }
     get target() {
-      const t = e.Api.gcHandleGetTarget(this.handle);
-      return t.isNull() ? null : new e.Object(t);
+      return new e.Object(e.api.gcHandleGetTarget(this.handle)).asNullable();
     }
     free() {
-      return e.Api.gcHandleFree(this.handle);
+      return e.api.gcHandleFree(this.handle);
     }
   };
 }(t || (t = {})), function(e) {
-  let t = class extends p {
+  let t = class extends c {
     get assembly() {
-      return new e.Assembly(e.Api.imageGetAssembly(this));
+      return new e.Assembly(e.api.imageGetAssembly(this));
     }
     get classCount() {
-      return e.Api.imageGetClassCount(this);
+      return e.api.imageGetClassCount(this);
     }
     get classes() {
       if (e.unityVersionIsBelow201830) {
         const t = this.assembly.object.method("GetTypes").invoke(!1);
-        return globalThis.Array.from(t).map((t => new e.Class(e.Api.classFromSystemType(t))));
+        return globalThis.Array.from(t).map((t => new e.Class(e.api.classFromObject(t))));
       }
-      return globalThis.Array.from(globalThis.Array(this.classCount), ((t, n) => new e.Class(e.Api.imageGetClass(this, n))));
+      return globalThis.Array.from(globalThis.Array(this.classCount), ((t, n) => new e.Class(e.api.imageGetClass(this, n))));
     }
     get name() {
-      return e.Api.imageGetName(this).readUtf8String();
+      return e.api.imageGetName(this).readUtf8String();
     }
     class(e) {
-      return this.tryClass(e) ?? i(`couldn't find class ${e} in assembly ${this.name}`);
+      return this.tryClass(e) ?? r(`couldn't find class ${e} in assembly ${this.name}`);
     }
     tryClass(t) {
-      const n = t.lastIndexOf("."), i = Memory.allocUtf8String(-1 == n ? "" : t.slice(0, n)), r = Memory.allocUtf8String(t.slice(n + 1)), s = e.Api.classFromName(this, i, r);
-      return s.isNull() ? null : new e.Class(s);
+      const n = t.lastIndexOf("."), r = Memory.allocUtf8String(-1 == n ? "" : t.slice(0, n)), i = Memory.allocUtf8String(t.slice(n + 1));
+      return new e.Class(e.api.classFromName(this, r, i)).asNullable();
     }
   };
-  n([ o ], t.prototype, "assembly", null), n([ o ], t.prototype, "classCount", null), 
-  n([ o ], t.prototype, "classes", null), n([ o ], t.prototype, "name", null), t = n([ m ], t), 
-  e.Image = t, l(e, "corlib", (() => new e.Image(e.Api.getCorlib())), o);
+  n([ l ], t.prototype, "assembly", null), n([ l ], t.prototype, "classCount", null), 
+  n([ l ], t.prototype, "classes", null), n([ l ], t.prototype, "name", null), t = n([ h ], t), 
+  e.Image = t, o(e, "corlib", (() => new e.Image(e.api.getCorlib())), l);
 }(t || (t = {})), function(e) {
-  class t extends p {
+  class t extends c {
     static capture() {
       return new e.MemorySnapshot;
     }
-    constructor(t = e.Api.memorySnapshotCapture()) {
+    constructor(t = e.api.memorySnapshotCapture()) {
       super(t);
     }
     get classes() {
-      return h((t => e.Api.memorySnapshotGetClasses(this, t))).map((t => new e.Class(t)));
+      return d((t => e.api.memorySnapshotGetClasses(this, t))).map((t => new e.Class(t)));
     }
     get objects() {
-      return _((t => e.Api.memorySnapshotGetObjects(this, t))).filter((e => !e.isNull())).map((t => new e.Object(t)));
+      return m((t => e.api.memorySnapshotGetObjects(this, t))).filter((e => !e.isNull())).map((t => new e.Object(t)));
     }
     free() {
-      e.Api.memorySnapshotFree(this);
+      e.api.memorySnapshotFree(this);
     }
   }
-  n([ o ], t.prototype, "classes", null), n([ o ], t.prototype, "objects", null), 
+  n([ l ], t.prototype, "classes", null), n([ l ], t.prototype, "objects", null), 
   e.MemorySnapshot = t, e.memorySnapshot = function(t) {
-    const n = e.MemorySnapshot.capture(), i = t(n);
-    return n.free(), i;
+    const n = e.MemorySnapshot.capture(), r = t(n);
+    return n.free(), r;
   };
 }(t || (t = {})), function(e) {
-  class t extends p {
+  class t extends c {
     get class() {
-      return new e.Class(e.Api.methodGetClass(this));
+      return new e.Class(e.api.methodGetClass(this));
     }
     get flags() {
-      return e.Api.methodGetFlags(this, NULL);
+      return e.api.methodGetFlags(this, NULL);
     }
     get implementationFlags() {
       const t = Memory.alloc(Process.pointerSize);
-      return e.Api.methodGetFlags(this, t), t.readU32();
+      return e.api.methodGetFlags(this, t), t.readU32();
     }
     get fridaSignature() {
       const t = [];
@@ -1489,49 +1556,70 @@ function m(e) {
       return this.isGeneric ? this.object.method("GetGenericArguments").invoke().length : 0;
     }
     get isExternal() {
-      return !!e.Api.methodIsExternal(this);
+      return 0 != (4096 & this.implementationFlags);
     }
     get isGeneric() {
-      return !!e.Api.methodIsGeneric(this);
+      return !!e.api.methodIsGeneric(this);
     }
     get isInflated() {
-      return !!e.Api.methodIsInflated(this);
+      return !!e.api.methodIsInflated(this);
     }
     get isStatic() {
-      return !e.Api.methodIsInstance(this);
+      return !e.api.methodIsInstance(this);
     }
     get isSynchronized() {
-      return !!e.Api.methodIsSynchronized(this);
+      return 0 != (32 & this.implementationFlags);
     }
     get modifier() {
-      return e.Api.methodGetModifier(this).readUtf8String();
+      switch (7 & this.flags) {
+       case 1:
+        return "private";
+
+       case 2:
+        return "private protected";
+
+       case 3:
+        return "internal";
+
+       case 4:
+        return "protected";
+
+       case 5:
+        return "protected internal";
+
+       case 6:
+        return "public";
+      }
     }
     get name() {
-      return e.Api.methodGetName(this).readUtf8String();
+      return e.api.methodGetName(this).readUtf8String();
     }
     get nativeFunction() {
       return new NativeFunction(this.virtualAddress, this.returnType.fridaAlias, this.fridaSignature);
     }
     get object() {
-      return new e.Object(e.Api.methodGetObject(this, NULL));
+      return new e.Object(e.api.methodGetObject(this, NULL));
     }
     get parameterCount() {
-      return e.Api.methodGetParameterCount(this);
+      return e.api.methodGetParameterCount(this);
     }
     get parameters() {
       return globalThis.Array.from(globalThis.Array(this.parameterCount), ((t, n) => {
-        const i = e.Api.methodGetParameterName(this, n).readUtf8String(), r = e.Api.methodGetParameterType(this, n);
-        return new e.Parameter(i, n, new e.Type(r));
+        const r = e.api.methodGetParameterName(this, n).readUtf8String(), i = e.api.methodGetParameterType(this, n);
+        return new e.Parameter(r, n, new e.Type(i));
       }));
     }
     get relativeVirtualAddress() {
       return this.virtualAddress.sub(e.module.base);
     }
     get returnType() {
-      return new e.Type(e.Api.methodGetReturnType(this));
+      return new e.Type(e.api.methodGetReturnType(this));
     }
     get virtualAddress() {
-      return e.Api.methodGetPointer(this);
+      const t = e.corlib.class("System.Reflection.Module").initialize().field("FilterTypeName").value, n = t.field("method_ptr").value, i = t.field("method").value.offsetOf((e => e.readPointer().equals(n))) ?? r("couldn't find the virtual address offset in the native method struct");
+      return o(e.Method.prototype, "virtualAddress", (function() {
+        return this.handle.add(i).readPointer();
+      }), l), e.corlib.class("System.Reflection.Module").method(".cctor").invoke(), this.virtualAddress;
     }
     set implementation(e) {
       try {
@@ -1539,14 +1627,14 @@ function m(e) {
       } catch (e) {
         switch (e.message) {
          case "access violation accessing 0x0":
-          i(`cannot implement method ${this.name}: it has a NULL virtual address`);
+          r(`couldn't set implementation for method ${this.name} as it has a NULL virtual address`);
 
-         case `unable to intercept function at ${this.virtualAddress}; please file a bug`:
-          r(`cannot implement method ${this.name}: it may be a thunk`);
+         case /unable to intercept function at \w+; please file a bug/.exec(e.message)?.input:
+          i(`couldn't set implementation for method ${this.name} as it may be a thunk`);
           break;
 
          case "already replaced this function":
-          r(`cannot implement method ${this.name}: already replaced by a thunk`);
+          i(`couldn't set implementation for method ${this.name} as it has already been replaced by a thunk`);
           break;
 
          default:
@@ -1555,31 +1643,31 @@ function m(e) {
       }
     }
     inflate(...t) {
-      this.isGeneric || i(`cannot inflate method ${this.name}: it has no generic parameters`), 
-      this.genericParameterCount != t.length && i(`cannot inflate method ${this.name}: it needs ${this.genericParameterCount} generic parameter(s), not ${t.length}`);
-      const n = t.map((e => e.type.object)), r = e.array(e.corlib.class("System.Type"), n), s = this.object.method("MakeGenericMethod", 1).invoke(r);
-      return new e.Method(e.Api.methodGetFromReflection(s));
+      this.isGeneric || r(`cannot inflate method ${this.name} as it has no generic parameters`), 
+      this.genericParameterCount != t.length && r(`cannot inflate method ${this.name} as it needs ${this.genericParameterCount} generic parameter(s), not ${t.length}`);
+      const n = t.map((e => e.type.object)), i = e.array(e.corlib.class("System.Type"), n), s = this.object.method("MakeGenericMethod", 1).invoke(i);
+      return new e.Method(s.field("mhandle").value);
     }
     invoke(...e) {
-      return this.isStatic || i(`cannot invoke a non-static method ${this.name}: must be invoked throught a Il2Cpp.Object, not a Il2Cpp.Class`), 
+      return this.isStatic || r(`cannot invoke non-static method ${this.name} as it must be invoked throught a Il2Cpp.Object, not a Il2Cpp.Class`), 
       this.invokeRaw(NULL, ...e);
     }
     invokeRaw(t, ...n) {
-      const r = n.map(e.toFridaValue);
-      this.isStatic && !e.unityVersionIsBelow201830 || r.unshift(t), this.isInflated && r.push(this.handle);
+      const i = n.map(e.toFridaValue);
+      this.isStatic && !e.unityVersionIsBelow201830 || i.unshift(t), this.isInflated && i.push(this.handle);
       try {
-        const t = this.nativeFunction(...r);
+        const t = this.nativeFunction(...i);
         return e.fromFridaValue(t, this.returnType);
       } catch (e) {
-        switch (null == e && i("an unexpected native function exception occurred, this is due to parameter types mismatch"), 
+        switch (null == e && r("an unexpected native invocation exception occurred, this is due to parameter types mismatch"), 
         e.message) {
          case "bad argument count":
-          i(`cannot invoke method ${this.name}: it needs ${this.parameterCount} parameter(s), not ${n.length}`);
+          r(`couldn't invoke method ${this.name} as it needs ${this.parameterCount} parameter(s), not ${n.length}`);
 
          case "expected a pointer":
          case "expected number":
          case "expected array with fields":
-          i(`cannot invoke method ${this.name}: parameter types mismatch`);
+          r(`couldn't invoke method ${this.name} using incorrect parameter types`);
         }
         throw e;
       }
@@ -1587,10 +1675,10 @@ function m(e) {
     overload(...e) {
       const t = this.tryOverload(...e);
       if (null != t) return t;
-      i(`cannot find overloaded method ${this.name}(${e})`);
+      r(`couldn't find overloaded method ${this.name}(${e})`);
     }
     parameter(e) {
-      return this.tryParameter(e) ?? i(`couldn't find parameter ${e} in method ${this.name}`);
+      return this.tryParameter(e) ?? r(`couldn't find parameter ${e} in method ${this.name}`);
     }
     revert() {
       Interceptor.revert(this.virtualAddress), Interceptor.flush();
@@ -1605,7 +1693,8 @@ function m(e) {
       return `${this.isStatic ? "static " : ""}${this.returnType.name} ${this.name}(${this.parameters.join(", ")});${this.virtualAddress.isNull() ? "" : ` // 0x${this.relativeVirtualAddress.toString(16).padStart(8, "0")}`}`;
     }
     withHolder(e) {
-      return new Proxy(this, {
+      return this.isStatic && r(`cannot access static method ${this.class.type.name}::${this.name} from an object, use a class instead`), 
+      new Proxy(this, {
         get(t, n) {
           switch (n) {
            case "invoke":
@@ -1614,8 +1703,8 @@ function m(e) {
            case "inflate":
            case "overload":
            case "tryOverload":
-            return function(...i) {
-              return t[n](...i)?.withHolder(e);
+            return function(...r) {
+              return t[n](...r)?.withHolder(e);
             };
           }
           return Reflect.get(t, n);
@@ -1624,38 +1713,37 @@ function m(e) {
     }
     wrap(t) {
       const n = +!this.isStatic | +e.unityVersionIsBelow201830;
-      return new NativeCallback(((...i) => {
-        const r = this.isStatic ? this.class : new e.Object(i[0]), s = this.parameters.map(((t, r) => e.fromFridaValue(i[r + n], t.type))), a = t.call(r, ...s);
+      return new NativeCallback(((...r) => {
+        const i = this.isStatic ? this.class : new e.Object(r[0]), s = this.parameters.map(((t, i) => e.fromFridaValue(r[i + n], t.type))), a = t.call(i, ...s);
         return e.toFridaValue(a);
       }), this.returnType.fridaAlias, this.fridaSignature);
     }
   }
-  n([ o ], t.prototype, "class", null), n([ o ], t.prototype, "flags", null), n([ o ], t.prototype, "implementationFlags", null), 
-  n([ o ], t.prototype, "fridaSignature", null), n([ o ], t.prototype, "genericParameterCount", null), 
-  n([ o ], t.prototype, "isExternal", null), n([ o ], t.prototype, "isGeneric", null), 
-  n([ o ], t.prototype, "isInflated", null), n([ o ], t.prototype, "isStatic", null), 
-  n([ o ], t.prototype, "isSynchronized", null), n([ o ], t.prototype, "modifier", null), 
-  n([ o ], t.prototype, "name", null), n([ o ], t.prototype, "nativeFunction", null), 
-  n([ o ], t.prototype, "object", null), n([ o ], t.prototype, "parameterCount", null), 
-  n([ o ], t.prototype, "parameters", null), n([ o ], t.prototype, "relativeVirtualAddress", null), 
-  n([ o ], t.prototype, "returnType", null), n([ o ], t.prototype, "virtualAddress", null), 
-  e.Method = t;
+  n([ l ], t.prototype, "class", null), n([ l ], t.prototype, "flags", null), n([ l ], t.prototype, "implementationFlags", null), 
+  n([ l ], t.prototype, "fridaSignature", null), n([ l ], t.prototype, "genericParameterCount", null), 
+  n([ l ], t.prototype, "isExternal", null), n([ l ], t.prototype, "isGeneric", null), 
+  n([ l ], t.prototype, "isInflated", null), n([ l ], t.prototype, "isStatic", null), 
+  n([ l ], t.prototype, "isSynchronized", null), n([ l ], t.prototype, "modifier", null), 
+  n([ l ], t.prototype, "name", null), n([ l ], t.prototype, "nativeFunction", null), 
+  n([ l ], t.prototype, "object", null), n([ l ], t.prototype, "parameterCount", null), 
+  n([ l ], t.prototype, "parameters", null), n([ l ], t.prototype, "relativeVirtualAddress", null), 
+  n([ l ], t.prototype, "returnType", null), e.Method = t;
 }(t || (t = {})), function(e) {
   class t extends c {
     static get headerSize() {
       return e.corlib.class("System.Object").instanceSize;
     }
     get class() {
-      return new e.Class(e.Api.objectGetClass(this));
+      return new e.Class(e.api.objectGetClass(this));
     }
     get size() {
-      return e.Api.objectGetSize(this);
+      return e.api.objectGetSize(this);
     }
     enter() {
-      return e.Api.monitorEnter(this);
+      return e.api.monitorEnter(this);
     }
     exit() {
-      return e.Api.monitorExit(this);
+      return e.api.monitorExit(this);
     }
     field(e) {
       return this.class.field(e).withHolder(this);
@@ -1664,19 +1752,19 @@ function m(e) {
       return this.class.method(e, t).withHolder(this);
     }
     pulse() {
-      return e.Api.monitorPulse(this);
+      return e.api.monitorPulse(this);
     }
     pulseAll() {
-      return e.Api.monitorPulseAll(this);
+      return e.api.monitorPulseAll(this);
     }
     ref(t) {
-      return new e.GCHandle(e.Api.gcHandleNew(this, +t));
+      return new e.GCHandle(e.api.gcHandleNew(this, +t));
     }
     virtualMethod(t) {
-      return new e.Method(e.Api.objectGetVirtualMethod(this, t)).withHolder(this);
+      return new e.Method(e.api.objectGetVirtualMethod(this, t)).withHolder(this);
     }
     tryEnter(t) {
-      return !!e.Api.monitorTryEnter(this, t);
+      return !!e.api.monitorTryEnter(this, t);
     }
     tryField(e) {
       return this.class.tryField(e)?.withHolder(this);
@@ -1685,22 +1773,22 @@ function m(e) {
       return this.class.tryMethod(e, t)?.withHolder(this);
     }
     tryWait(t) {
-      return !!e.Api.monitorTryWait(this, t);
+      return !!e.api.monitorTryWait(this, t);
     }
     toString() {
       return this.isNull() ? "null" : this.method("ToString").invoke().content ?? "null";
     }
     unbox() {
-      return new e.ValueType(e.Api.objectUnbox(this), this.class.type);
+      return new e.ValueType(e.api.objectUnbox(this), this.class.type);
     }
     wait() {
-      return e.Api.monitorWait(this);
+      return e.api.monitorWait(this);
     }
     weakRef(t) {
-      return new e.GCHandle(e.Api.gcHandleNewWeakRef(this, +t));
+      return new e.GCHandle(e.api.gcHandleNewWeakRef(this, +t));
     }
   }
-  n([ o ], t.prototype, "class", null), n([ o ], t.prototype, "size", null), n([ o ], t, "headerSize", null), 
+  n([ l ], t.prototype, "class", null), n([ l ], t.prototype, "size", null), n([ l ], t, "headerSize", null), 
   e.Object = t;
 }(t || (t = {})), function(e) {
   e.Parameter = class {
@@ -1725,7 +1813,7 @@ function m(e) {
     }
     read(e, t = 0) {
       const n = new globalThis.Array(e);
-      for (let i = 0; i < e; i++) n[i] = this.get(i + t);
+      for (let r = 0; r < e; r++) n[r] = this.get(r + t);
       return n;
     }
     set(t, n) {
@@ -1754,72 +1842,77 @@ function m(e) {
       return this.isNull() ? "null" : `->${this.value}`;
     }
   }, e.reference = function(t, n) {
-    const r = Memory.alloc(Process.pointerSize);
+    const i = Memory.alloc(Process.pointerSize);
     switch (typeof t) {
      case "boolean":
-      return new e.Reference(r.writeS8(+t), e.corlib.class("System.Boolean").type);
+      return new e.Reference(i.writeS8(+t), e.corlib.class("System.Boolean").type);
 
      case "number":
       switch (n?.typeEnum) {
-       case 5:
-        return new e.Reference(r.writeU8(t), n);
+       case e.Type.enum.unsignedByte:
+        return new e.Reference(i.writeU8(t), n);
 
-       case 4:
-        return new e.Reference(r.writeS8(t), n);
+       case e.Type.enum.byte:
+        return new e.Reference(i.writeS8(t), n);
 
-       case 3:
-       case 7:
-        return new e.Reference(r.writeU16(t), n);
+       case e.Type.enum.char:
+       case e.Type.enum.unsignedShort:
+        return new e.Reference(i.writeU16(t), n);
 
-       case 6:
-        return new e.Reference(r.writeS16(t), n);
+       case e.Type.enum.short:
+        return new e.Reference(i.writeS16(t), n);
 
-       case 9:
-        return new e.Reference(r.writeU32(t), n);
+       case e.Type.enum.unsignedInt:
+        return new e.Reference(i.writeU32(t), n);
 
-       case 8:
-        return new e.Reference(r.writeS32(t), n);
+       case e.Type.enum.int:
+        return new e.Reference(i.writeS32(t), n);
 
-       case 11:
-        return new e.Reference(r.writeU64(t), n);
+       case e.Type.enum.unsignedLong:
+        return new e.Reference(i.writeU64(t), n);
 
-       case 10:
-        return new e.Reference(r.writeS64(t), n);
+       case e.Type.enum.long:
+        return new e.Reference(i.writeS64(t), n);
 
-       case 12:
-        return new e.Reference(r.writeFloat(t), n);
+       case e.Type.enum.float:
+        return new e.Reference(i.writeFloat(t), n);
 
-       case 13:
-        return new e.Reference(r.writeDouble(t), n);
+       case e.Type.enum.double:
+        return new e.Reference(i.writeDouble(t), n);
       }
 
      case "object":
-      if (t instanceof e.ValueType || t instanceof e.Pointer) return new e.Reference(r.writePointer(t), t.type);
-      if (t instanceof e.Object) return new e.Reference(r.writePointer(t), t.class.type);
-      if (t instanceof e.String || t instanceof e.Array) return new e.Reference(r.writePointer(t), t.object.class.type);
+      if (t instanceof e.ValueType || t instanceof e.Pointer) return new e.Reference(i.writePointer(t), t.type);
+      if (t instanceof e.Object) return new e.Reference(i.writePointer(t), t.class.type);
+      if (t instanceof e.String || t instanceof e.Array) return new e.Reference(i.writePointer(t), t.object.class.type);
       if (t instanceof NativePointer) switch (n?.typeEnum) {
-       case 25:
-       case 24:
-        return new e.Reference(r.writePointer(t), n);
+       case e.Type.enum.unsignedNativePointer:
+       case e.Type.enum.nativePointer:
+        return new e.Reference(i.writePointer(t), n);
       } else {
-        if (t instanceof Int64) return new e.Reference(r.writeS64(t), e.corlib.class("System.Int64").type);
-        if (t instanceof UInt64) return new e.Reference(r.writeU64(t), e.corlib.class("System.UInt64").type);
+        if (t instanceof Int64) return new e.Reference(i.writeS64(t), e.corlib.class("System.Int64").type);
+        if (t instanceof UInt64) return new e.Reference(i.writeU64(t), e.corlib.class("System.UInt64").type);
       }
 
      default:
-      i(`don't know how to create a reference to ${t} using type ${n?.name}`);
+      r(`couldn't create a reference to ${t} using an unhandled type ${n?.name}`);
     }
   };
 }(t || (t = {})), function(e) {
   e.String = class extends c {
     get content() {
-      return e.Api.stringChars(this).readUtf16String(this.length);
+      return e.api.stringGetChars(this).readUtf16String(this.length);
     }
     set content(t) {
-      e.Api.stringChars(this).writeUtf16String(t ?? ""), e.Api.stringSetLength(this, t?.length ?? 0);
+      const n = e.string("vfsfitvnm").handle.offsetOf((e => 32 == e.readInt())) ?? r("couldn't find the length offset in the native string struct");
+      globalThis.Object.defineProperty(e.String.prototype, "content", {
+        set(t) {
+          e.api.stringGetChars(this).writeUtf16String(t ?? ""), this.handle.add(n).writeS32(t?.length ?? 0);
+        }
+      }), this.content = t;
     }
     get length() {
-      return e.Api.stringLength(this);
+      return e.api.stringGetLength(this);
     }
     get object() {
       return new e.Object(this);
@@ -1828,25 +1921,27 @@ function m(e) {
       return this.isNull() ? "null" : `"${this.content}"`;
     }
   }, e.string = function(t) {
-    return new e.String(e.Api.stringNew(Memory.allocUtf8String(t || "")));
+    return new e.String(e.api.stringNew(Memory.allocUtf8String(t ?? "")));
   };
 }(t || (t = {})), function(e) {
   class t extends c {
-    static get idOffset() {
-      const t = ptr(e.currentThread.internal.field("thread_id").value.toString()), n = Process.getCurrentThreadId();
-      for (let e = 0; e < 1024; e++) try {
-        if (t.add(e).readS32() == n) return e;
-      } catch (e) {}
-      i("couldn't determine the offset for a native thread id value");
-    }
     get id() {
-      return ptr(this.internal.field("thread_id").value.toString()).add(e.Thread.idOffset).readS32();
+      let t = function() {
+        return this.internal.field("thread_id").value.toNumber();
+      };
+      if ("windows" != Process.platform) {
+        const n = Process.getCurrentThreadId(), i = ptr(t.apply(e.currentThread)).offsetOf((e => e.readS32() == n), 1024) ?? r("couldn't find the offset for determining the kernel id of a posix thread"), s = t;
+        t = function() {
+          return ptr(s.apply(this)).add(i).readS32();
+        };
+      }
+      return o(e.Thread.prototype, "id", t, l), this.id;
     }
     get internal() {
       return this.object.tryField("internal_thread")?.value ?? this.object;
     }
     get isFinalizer() {
-      return !e.Api.threadIsVm(this);
+      return !e.api.threadIsVm(this);
     }
     get managedId() {
       return this.object.method("get_ManagedThreadId").invoke();
@@ -1858,115 +1953,145 @@ function m(e) {
       return this.internal.field("static_data").value;
     }
     get synchronizationContext() {
-      const t = (this.object.tryMethod("GetMutableExecutionContext") || this.object.method("get_ExecutionContext")).invoke();
-      let n = t.tryField("_syncContext")?.value ?? t.tryMethod("get_SynchronizationContext")?.invoke();
-      if (null == n) {
-        const t = e.corlib.class("System.Threading.SynchronizationContext");
-        for (let i = 0; i < 16; i++) try {
-          const r = new e.Object(this.staticData.add(Process.pointerSize * i).readPointer().readPointer());
-          if (r.class.isSubclassOf(t, !1)) {
-            n = r;
-            break;
-          }
-        } catch (e) {}
-      }
-      return (null == n || n.isNull()) && i("couldn't retrieve the SynchronizationContext for this thread."), 
+      const t = (this.object.tryMethod("GetMutableExecutionContext") ?? this.object.method("get_ExecutionContext")).invoke();
+      let n = t.tryField("_syncContext")?.value ?? t.tryMethod("get_SynchronizationContext")?.invoke() ?? this.tryLocalValue(e.corlib.class("System.Threading.SynchronizationContext"));
+      return (null == n || n.isNull()) && (this.handle.equals(e.mainThread.handle) ? r("couldn't find the synchronization context of the main thread, perhaps this is early instrumentation?") : r(`couldn't find the synchronization context of thread #${this.managedId}, only the main thread is expected to have one`)), 
       n;
     }
     detach() {
-      return e.Api.threadDetach(this);
+      return e.api.threadDetach(this);
     }
-    schedule(t, n = 0) {
-      return new Promise((i => {
-        const r = e.delegate(e.corlib.class("System.Threading.SendOrPostCallback"), (() => {
+    schedule(t) {
+      const n = this.synchronizationContext.method("Post");
+      return new Promise((r => {
+        const i = e.delegate(e.corlib.class("System.Threading.SendOrPostCallback"), (() => {
           const e = t();
-          setImmediate((() => i(e)));
+          setImmediate((() => r(e)));
         }));
-        setTimeout((() => this.synchronizationContext.method("Post").invoke(r, NULL)), n);
+        Script.bindWeak(globalThis, (() => {
+          i.field("method_ptr").value = i.field("invoke_impl").value = e.api.domainGet;
+        })), n.invoke(i, NULL);
       }));
     }
+    tryLocalValue(t) {
+      for (let n = 0; n < 16; n++) {
+        const r = this.staticData.add(n * Process.pointerSize).readPointer();
+        if (!r.isNull()) {
+          const n = new e.Object(r.readPointer()).asNullable();
+          if (n?.class?.isSubclassOf(t, !1)) return n;
+        }
+      }
+    }
   }
-  n([ o ], t.prototype, "id", null), n([ o ], t.prototype, "internal", null), n([ o ], t.prototype, "isFinalizer", null), 
-  n([ o ], t.prototype, "managedId", null), n([ o ], t.prototype, "object", null), 
-  n([ o ], t.prototype, "staticData", null), n([ o ], t.prototype, "synchronizationContext", null), 
-  n([ o ], t, "idOffset", null), e.Thread = t, l(e, "attachedThreads", (() => _(e.Api.threadGetAllAttachedThreads).map((t => new e.Thread(t))))), 
-  l(e, "currentThread", (() => {
-    const t = e.Api.threadCurrent();
-    return t.isNull() ? null : new e.Thread(t);
-  })), l(e, "mainThread", (() => e.attachedThreads[0]));
+  n([ l ], t.prototype, "internal", null), n([ l ], t.prototype, "isFinalizer", null), 
+  n([ l ], t.prototype, "managedId", null), n([ l ], t.prototype, "object", null), 
+  n([ l ], t.prototype, "staticData", null), n([ l ], t.prototype, "synchronizationContext", null), 
+  e.Thread = t, o(e, "attachedThreads", (() => m(e.api.threadGetAttachedThreads).map((t => new e.Thread(t))))), 
+  o(e, "currentThread", (() => new e.Thread(e.api.threadGetCurrent()).asNullable())), 
+  o(e, "mainThread", (() => e.attachedThreads[0]));
 }(t || (t = {})), function(e) {
-  class t extends p {
+  let t = class extends c {
+    static get enum() {
+      const t = (t, n = (e => e)) => n(e.corlib.class(t)).type.typeEnum;
+      return {
+        void: t("System.Void"),
+        boolean: t("System.Boolean"),
+        char: t("System.Char"),
+        byte: t("System.SByte"),
+        unsignedByte: t("System.Byte"),
+        short: t("System.Int16"),
+        unsignedShort: t("System.UInt16"),
+        int: t("System.Int32"),
+        unsignedInt: t("System.UInt32"),
+        long: t("System.Int64"),
+        unsignedLong: t("System.UInt64"),
+        nativePointer: t("System.IntPtr"),
+        unsignedNativePointer: t("System.UIntPtr"),
+        float: t("System.Single"),
+        double: t("System.Double"),
+        pointer: t("System.IntPtr", (e => e.field("m_value"))),
+        valueType: t("System.Decimal"),
+        object: t("System.Object"),
+        string: t("System.String"),
+        class: t("System.Array"),
+        array: t("System.Void", (e => e.arrayClass)),
+        multidimensionalArray: t("System.Void", (t => new e.Class(e.api.classGetArrayClass(t, 2)))),
+        genericInstance: t("System.Int32", (e => e.interfaces.find((e => e.name.endsWith("`1")))))
+      };
+    }
     get class() {
-      return new e.Class(e.Api.classFromType(this));
+      return new e.Class(e.api.typeGetClass(this));
     }
     get fridaAlias() {
       if (this.isByReference) return "pointer";
       switch (this.typeEnum) {
-       case 1:
+       case e.Type.enum.void:
         return "void";
 
-       case 2:
+       case e.Type.enum.boolean:
         return "bool";
 
-       case 3:
+       case e.Type.enum.char:
         return "uchar";
 
-       case 4:
+       case e.Type.enum.byte:
         return "int8";
 
-       case 5:
+       case e.Type.enum.unsignedByte:
         return "uint8";
 
-       case 6:
+       case e.Type.enum.short:
         return "int16";
 
-       case 7:
+       case e.Type.enum.unsignedShort:
         return "uint16";
 
-       case 8:
+       case e.Type.enum.int:
         return "int32";
 
-       case 9:
+       case e.Type.enum.unsignedInt:
         return "uint32";
 
-       case 10:
+       case e.Type.enum.long:
         return "int64";
 
-       case 11:
+       case e.Type.enum.unsignedLong:
         return "uint64";
 
-       case 12:
+       case e.Type.enum.float:
         return "float";
 
-       case 13:
+       case e.Type.enum.double:
         return "double";
 
-       case 17:
-        return i(this);
+       case e.Type.enum.valueType:
+        return r(this);
 
-       case 24:
-       case 25:
-       case 15:
-       case 14:
-       case 29:
-       case 20:
-       default:
+       case e.Type.enum.nativePointer:
+       case e.Type.enum.unsignedNativePointer:
+       case e.Type.enum.pointer:
+       case e.Type.enum.string:
+       case e.Type.enum.array:
+       case e.Type.enum.multidimensionalArray:
         return "pointer";
 
-       case 18:
-       case 28:
-       case 21:
-        return this.class.isValueType ? i(this) : "pointer";
+       case e.Type.enum.class:
+       case e.Type.enum.object:
+       case e.Type.enum.genericInstance:
+        return this.class.isValueType ? r(this) : "pointer";
+
+       default:
+        return "pointer";
       }
     }
     get isByReference() {
-      return !!e.Api.typeIsByReference(this);
+      return this.name.endsWith("&");
     }
     get isPrimitive() {
-      return !!e.Api.typeIsPrimitive(this);
+      return this.typeEnum >= e.Type.enum.boolean && this.typeEnum <= e.Type.enum.double || this.typeEnum == e.Type.enum.nativePointer || this.typeEnum == e.Type.enum.unsignedNativePointer;
     }
     get name() {
-      const t = e.Api.typeGetName(this);
+      const t = e.api.typeGetName(this);
       try {
         return t.readUtf8String();
       } finally {
@@ -1974,23 +2099,23 @@ function m(e) {
       }
     }
     get object() {
-      return new e.Object(e.Api.typeGetObject(this));
+      return new e.Object(e.api.typeGetObject(this));
     }
     get typeEnum() {
-      return e.Api.typeGetTypeEnum(this);
+      return e.api.typeGetTypeEnum(this);
     }
     toString() {
       return this.name;
     }
-  }
-  function i(e) {
+  };
+  function r(e) {
     const t = e.class.fields.filter((e => !e.isStatic));
     return 0 == t.length ? [ "char" ] : t.map((e => e.type.fridaAlias));
   }
-  n([ o ], t.prototype, "class", null), n([ o ], t.prototype, "fridaAlias", null), 
-  n([ o ], t.prototype, "isByReference", null), n([ o ], t.prototype, "isPrimitive", null), 
-  n([ o ], t.prototype, "name", null), n([ o ], t.prototype, "object", null), n([ o ], t.prototype, "typeEnum", null), 
-  e.Type = t;
+  n([ l ], t.prototype, "class", null), n([ l ], t.prototype, "fridaAlias", null), 
+  n([ l ], t.prototype, "isByReference", null), n([ l ], t.prototype, "isPrimitive", null), 
+  n([ l ], t.prototype, "name", null), n([ l ], t.prototype, "object", null), n([ l ], t.prototype, "typeEnum", null), 
+  n([ l ], t, "enum", null), t = n([ h ], t), e.Type = t;
 }(t || (t = {})), function(e) {
   e.ValueType = class extends c {
     type;
@@ -1998,158 +2123,17 @@ function m(e) {
       super(e), this.type = t;
     }
     box() {
-      return new e.Object(e.Api.valueBox(this.type.class, this));
+      return new e.Object(e.api.valueTypeBox(this.type.class, this));
     }
     field(e) {
       return this.type.class.field(e).withHolder(this);
     }
+    tryField(e) {
+      return this.type.class.tryField(e)?.withHolder(this);
+    }
     toString() {
       return this.isNull() ? "null" : this.box().toString();
     }
-  };
-}(t || (t = {})), function(e) {
-  e.AbstractTracer = class {
-    targets=[];
-    #e;
-    #t;
-    #n;
-    #i;
-    #r;
-    #s;
-    #a;
-    domain() {
-      return this;
-    }
-    assemblies(...e) {
-      return this.#e = e, this;
-    }
-    classes(...e) {
-      return this.#t = e, this;
-    }
-    methods(...e) {
-      return this.#n = e, this;
-    }
-    filterAssemblies(e) {
-      return this.#i = e, this;
-    }
-    filterClasses(e) {
-      return this.#r = e, this;
-    }
-    filterMethods(e) {
-      return this.#s = e, this;
-    }
-    filterParameters(e) {
-      return this.#a = e, this;
-    }
-    and() {
-      const t = e => {
-        if (null != this.#a) {
-          for (const t of e.parameters) if (this.#a(t)) {
-            this.targets.push(e);
-            break;
-          }
-        } else this.targets.push(e);
-      }, n = e => {
-        for (const n of e) t(n);
-      }, i = e => {
-        if (null != this.#s) for (const n of e.methods) this.#s(n) && t(n); else n(e.methods);
-      }, r = e => {
-        for (const t of e) i(t);
-      }, s = e => {
-        if (null != this.#r) for (const t of e.image.classes) this.#r(t) && i(t); else r(e.image.classes);
-      }, a = e => {
-        for (const t of e) s(t);
-      };
-      return this.#n ? n(this.#n) : this.#t ? r(this.#t) : this.#e ? a(this.#e) : (e => {
-        if (null != this.#i) for (const t of e.assemblies) this.#i(t) && s(t); else a(e.assemblies);
-      })(e.domain), this.#e = void 0, this.#t = void 0, this.#n = void 0, this.#i = void 0, 
-      this.#r = void 0, this.#s = void 0, this.#a = void 0, this;
-    }
-  };
-}(t || (t = {})), function(e) {
-  class t extends e.AbstractTracer {
-    mode;
-    isVerbose=!0;
-    methodList=e.domain.assemblies.flatMap((e => e.image.classes.flatMap((e => e.methods.filter((e => !e.virtualAddress.isNull())))))).sort(((e, t) => e.virtualAddress.compare(t.virtualAddress)));
-    strategy(e) {
-      return this.mode = globalThis.Backtracer[e.toUpperCase()], this;
-    }
-    verbose(e) {
-      return this.isVerbose = e, this;
-    }
-    attach() {
-      const t = this, n = this.isVerbose ? void 0 : new Set;
-      for (const i of this.targets) if (!i.virtualAddress.isNull()) try {
-        Interceptor.attach(i.virtualAddress, (function() {
-          let r = globalThis.Thread.backtrace(this.context, t.mode).reverse();
-          if (r.push(i.virtualAddress), !t.isVerbose) {
-            const e = r.map((e => e.toString())).join("");
-            if (n?.has(e)) return;
-            n?.add(e);
-          }
-          let s = 0;
-          for (const n of r) {
-            const i = n >= e.module.base && n < e.module.base.add(e.module.size) ? t.searchInsert(n) : void 0, r = 0 == s ? "" : `${" ".repeat(2 * (s - 1))}└─`;
-            if (null != i) {
-              {
-                const e = n.sub(i.virtualAddress);
-                if (n.sub(i.virtualAddress).compare(4095) > 0) continue;
-                a(`[2m0x${i.relativeVirtualAddress.toString(16).padStart(8, "0")}+0x${e.toString(16).padStart(3, "0")}[0m ${r}${i.class.type.name}.[1m${i.name}[0m`);
-              }
-              s++;
-            }
-          }
-        }));
-      } catch (e) {}
-    }
-    searchInsert(e) {
-      let t = 0, n = this.methodList.length - 1;
-      for (;t <= n; ) {
-        const i = Math.floor((t + n) / 2), r = this.methodList[i].virtualAddress.compare(e);
-        if (0 == r) return this.methodList[i];
-        r > 0 ? n = i - 1 : t = i + 1;
-      }
-      return this.methodList[n];
-    }
-  }
-  e.Backtracer = t, e.backtrace = function() {
-    return new e.Backtracer;
-  };
-}(t || (t = {})), function(e) {
-  class t extends e.AbstractTracer {
-    withParameters=!1;
-    parameters(e) {
-      return this.withParameters = e, this;
-    }
-    attach() {
-      let t = 0;
-      for (const n of this.targets) {
-        if (n.virtualAddress.isNull()) continue;
-        const i = `[2m0x${n.relativeVirtualAddress.toString(16).padStart(8, "0")}[0m`, r = `${n.class.type.name}.[1m${n.name}[0m`;
-        if (this.withParameters) {
-          const s = +!n.isStatic | +e.unityVersionIsBelow201830, l = (...l) => {
-            const o = n.isStatic ? void 0 : new e.Parameter("this", -1, n.class.type), c = o ? [ o ].concat(n.parameters) : n.parameters;
-            a(`${i} ${"│ ".repeat(t++)}┌─[35m${r}[0m(${c.map((t => `[32m${t.name}[0m = [31m${e.fromFridaValue(l[t.position + s], t.type)}[0m`)).join(", ")});`);
-            const p = n.nativeFunction(...l);
-            return a(`${i} ${"│ ".repeat(--t)}└─[33m${r}[0m${null == p ? "" : ` = [36m${e.fromFridaValue(p, n.returnType)}`}[0m;`), 
-            p;
-          };
-          try {
-            n.revert();
-            const e = new NativeCallback(l, n.returnType.fridaAlias, n.fridaSignature);
-            Interceptor.replace(n.virtualAddress, e);
-          } catch (e) {}
-        } else try {
-          Interceptor.attach(n.virtualAddress, {
-            onEnter: () => a(`${i} ${"│ ".repeat(t++)}┌─[35m${r}[0m`),
-            onLeave: () => a(`${i} ${"│ ".repeat(--t)}└─[33m${r}[0m${0 == t ? "\n" : ""}`)
-          });
-        } catch (e) {}
-      }
-    }
-  }
-  e.Tracer = t, e.trace = function() {
-    return new e.Tracer;
   };
 }(t || (t = {})), globalThis.Il2Cpp = t;
 
@@ -2290,4 +2274,4 @@ exports.setTimeout = function() {
 }).call(this)}).call(this,require("timers").setImmediate,require("timers").clearImmediate)
 
 },{"process/browser.js":4,"timers":5}]},{},[1])
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icm93c2VyLXBhY2svX3ByZWx1ZGUuanMiLCJpbmRleC50cyIsIm1haW4uanMiLCJub2RlX21vZHVsZXMvZnJpZGEtaWwyY3BwLWJyaWRnZS9kaXN0L2luZGV4LmpzIiwibm9kZV9tb2R1bGVzL3Byb2Nlc3MvYnJvd3Nlci5qcyIsIm5vZGVfbW9kdWxlcy90aW1lcnMtYnJvd3NlcmlmeS9tYWluLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7SUNBQSxRQUFBOztBQUNBLE1BQUEsSUFBQSxRQUFBOztBQUNBLGFBQWEsRUFBQTs7Ozs7OztBQ0ZiLFNBQWdCO0VBQ1osT0FBTyxTQUFRO0lBQ1g7TUFDSSxRQUFRLElBQUksbUJBQW1CLE9BQU8sZUFDdEMsUUFBUSxJQUFJO01BQ1osT0FBTyxLQUFLLFdBQVcsaUJBQWlCLFFBQVE7TUFDbEQsT0FBTztNQUNMLFFBQVEsSUFBSTs7O0FBR3hCOzs7OzRCQVZBLFFBQUE7Ozs7QUNBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Ozs7QUN4a0VBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQ2hHQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJmaWxlIjoiZ2VuZXJhdGVkLmpzIiwic291cmNlUm9vdCI6IiJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icm93c2VyLXBhY2svX3ByZWx1ZGUuanMiLCJpbmRleC50cyIsIm1haW4uanMiLCJub2RlX21vZHVsZXMvZnJpZGEtaWwyY3BwLWJyaWRnZS9kaXN0L2luZGV4LmpzIiwibm9kZV9tb2R1bGVzL3Byb2Nlc3MvYnJvd3Nlci5qcyIsIm5vZGVfbW9kdWxlcy90aW1lcnMtYnJvd3NlcmlmeS9tYWluLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7SUNBQSxRQUFBOztBQUNBLE1BQUEsSUFBQSxRQUFBOztBQUNBLGFBQWEsRUFBQTs7Ozs7OztBQ0ZiLFNBQWdCO0VBQ1osT0FBTyxTQUFRO0lBQ1gsUUFBUSxJQUFJLG9CQUFvQixPQUFPLGVBQ3ZDLFFBQVEsSUFBSTtJQUNaLE9BQU8sS0FBSyxXQUFXLGlCQUFpQixRQUFRLGNBQ2hELFFBQVEsSUFBSTtBQUFXO0FBRS9COzs7OzRCQVBBLFFBQUE7Ozs7QUNBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Ozs7QUM1akVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQ2hHQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJmaWxlIjoiZ2VuZXJhdGVkLmpzIiwic291cmNlUm9vdCI6IiJ9
