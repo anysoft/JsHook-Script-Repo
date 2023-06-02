@@ -1,7 +1,7 @@
 # 名称
 Unity Dump
 # Version
-1.0
+1.1
 # 脚本类型
 Frida
 # 描述
