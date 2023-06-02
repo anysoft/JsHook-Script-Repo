@@ -52,7 +52,8 @@ function main() {
                 "type": scriptType,
                 "version": version,
                 "url": "https://raw.githubusercontent.com/bcmdy/JsHook-Script-Repo/" + branch + "/Scripts/" + name + "/" + scriptType + ".js",
-                "desc": description
+                "desc": description,
+                "user_count": 999
             };
             stores.push(store);
             let store_cdn = {
@@ -65,7 +66,8 @@ function main() {
                 "type": scriptType,
                 "version": version,
                 "url": "https://cdn.jsdelivr.net/gh/bcmdy/JsHook-Script-Repo@" + branch + "/Scripts/" + name + "/" + scriptType + ".js",
-                "desc": description
+                "desc": description,
+                "user_count": 999
             };
             stores_cdn.push(store_cdn);
         }
