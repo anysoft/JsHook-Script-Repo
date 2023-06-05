@@ -10,7 +10,7 @@ main()
 function main() {
     const stores = [];
     const stores_cdn = [];
-    let allFiles = getAllFiles('./Scripts/');
+    let allFiles = getAllFiles('./Scripts');
     console.log(`文件数量:${allFiles.length}`);
     for (let i = 0; i < allFiles.length; i++) {
         // console.log(allFiles[i]);
