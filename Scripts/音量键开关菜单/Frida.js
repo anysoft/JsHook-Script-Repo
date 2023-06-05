@@ -34,7 +34,7 @@ function createmenu() {
 };
 Java.perform(function () {
     Java.use("android.app.Activity").onKeyDown.overload('int', 'android.view.KeyEvent').implementation = function (keyCode, KeyEvent) {
-        (keyCode == 25) && createmenu();// 25 音量- ;24音量+
+        (keyCode == 25) && createmenu();// 25 音量- ;24 音量+
         // console.log(keyCode, '||', KeyEvent);
         let ret = this.onKeyDown(keyCode, KeyEvent);
         return ret;
