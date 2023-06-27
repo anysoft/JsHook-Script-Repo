@@ -1,5 +1,5 @@
 {
-    "name": "墨殇的仓库CDN",
+    "name": "JSHOOK仓库CDN",
     "icon": null,
     "list": "https://cdn.jsdelivr.net/gh/anysoft/JsHook-Script-Repo@master/Store-cdn.json",
     "push": "https://cdn.jsdelivr.net/gh/anysoft/JsHook-Script-Repo@master/msg/msg-cdn.json",
