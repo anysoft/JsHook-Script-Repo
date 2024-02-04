@@ -16,7 +16,7 @@ function printStack() {
 // package 
 if (packageName == 'com.dragon.read') {
 
-    var class_userinfo = 'com.dragon.read.user.k'
+    var class_userinfo = 'com.dragon.read.user.l'
     var class_download_book = 'com.dragon.read.reader.download.c'
     var class_user_downlaod_book_list = 'com.dragon.read.user.e'
     var class_app_toast_utils = 'com.dragon.read.util.ToastUtils'
@@ -121,20 +121,31 @@ if (packageName == 'com.dragon.read') {
                         var infoResponse = param.args[1];
                         // define var 
                         var currentTimeMillis = java.lang.System.currentTimeMillis();
-                        var expireDay = 3650;
+                        var expireDay = 3655;
                         var leftTime = 1000 + 60 * 60 * 24 * expireDay;
                         var freeAdLeft = leftTime;
                         var expireTime = java.lang.Long.valueOf(currentTimeMillis / 1000 + leftTime);
                         // console.log('init expireTime = ' + expireTime);
                         var data = infoResponse.data;
+
+                        data.adVipAvailable = true;
                         data.freeAd = true;
                         data.freeAdDay = java.lang.Integer.valueOf(expireDay);
                         data.freeAdExpire = expireTime;
                         data.freeAdLeft = java.lang.Long.valueOf(freeAdLeft);
+                        data.hasIdfa = true;
                         data.hasMedal = true;
-                        data.vipLastExpiredTime = java.lang.Long.valueOf(1654752180).toString();
+                        data.hasPopupSetInfo = true;
+                        data.hasShowFansBan = true;
+                        data.inBookPublishTopicPrivilege = true;
+                        data.isVideoSeriesUgcWhiteUser = true;
+
+                        data.vipLastExpiredTime = expireTime.toString(); // java.lang.Long.valueOf(1654752180).toString();
+
+                        data.contractEntrance.show = true;
 
                         var vipInfo = data.vipInfo;
+                        vipInfo.autoRenew = true;
                         vipInfo.continueMonth = true;
                         vipInfo.continueMonthBuy = true;
                         vipInfo.expireTime = expireTime.toString();
@@ -144,6 +155,25 @@ if (packageName == 'com.dragon.read') {
 
 
                         data.vipInfo = vipInfo;
+
+
+                        // vip_info_list
+                        vipInfoList = data.vipInfoList;
+
+                        vipInfoList.forEach(infoData => {
+                            infoData.expireTime = expireTime.toString();
+                            infoData.autoRenew = true;
+                            infoData.continueMonth = true;
+                            infoData.continueMonthBuy = true;
+                            // infoData.isAdVip = true;
+                            // infoData.is_union_vip = true;
+                            infoData.isVip = '1';
+                            infoData.leftTime = java.lang.Long.valueOf(leftTime).toString();;
+
+                        });
+
+
+
 
                         // privilege 
                         privilege = data.privilege;
@@ -166,9 +196,17 @@ if (packageName == 'com.dragon.read') {
                             // console.log(privilege.get(0).downloadBookIds.getClass().toString());
                             // privilege.clear();
                         }
-                        privilege.add(addPrivilege('6703327493505422087', 'TTS权益', '{\"from\":4}', null));
+                        privilege.add(addPrivilege('6703327493505422087', 'TTS权益', '{\"from\":2}', null)); // 4 2
                         privilege.add(addPrivilege('7025948416286921516', 'TTS权益', '{\"from\":4}', null));
                         privilege.add(addPrivilege('6703327536606089992', '激励数据权益', '{\"from\":1}', null));
+
+                        // read_card_info
+                        readCardInfo = data.readCardInfo
+                        readCardInfo.expireTime = expireTime.toString();
+                        readCardInfo.leftTime = leftTime;
+                        readCardInfo.ownReadCard = true;
+
+
                         downloadBookIds = null;
                         // bookId = '7045925577483619000'
                         if (bookId != '') {
@@ -182,10 +220,11 @@ if (packageName == 'com.dragon.read') {
                         }
                         privilege.add(addPrivilege('6766572795204735752', '批量下载', '{\"book_list\":{\"' + bookId + '\":\"' + expireTime + '\"},\"from\":1}', downloadBookIds));
 
-                        privilege.add(addPrivilege('6703327401314620167', '免广告', '{\"from\":1}', null));
+                        privilege.add(addPrivilege('6703327401314620167', '免广告', '{\"from\":2}', null)); // 1 2
                         privilege.add(addPrivilege('7077535443348116268', '所有场景免广告', '{\"from\":1}', null));
-                        privilege.add(addPrivilege('6703327578779816712', '离线阅读', '{\"from\":1}', null));
-                        privilege.add(addPrivilege('6836977122288866051', '', '{\"from\":1}', null)); // 自动阅读
+                        privilege.add(addPrivilege('6703327578779816712', '离线阅读', '{\"from\":2}', null));// 1
+                        privilege.add(addPrivilege('6836977122288866051', '', '{\"from\":2}', null)); // 自动阅读
+                        privilege.add(addPrivilege('7315003038136013631', '', '{\"from\":2}', null)); // 
                         data.privilege = privilege
                         // console.log(gson.toJson(privilege));
 
@@ -197,7 +236,7 @@ if (packageName == 'com.dragon.read') {
 
 
                         // console.log(gson.toJson(param.args[0]));
-                        console.log(gson.toJson(param.args[1]));
+                        // console.log(gson.toJson(param.args[1]));
                         // console.log(gson.toJson(gson.fromJson(gson.toJson(param.args[1]),infoResponse.getClass())))
                     } else {
                         console.log('length not equal 2')
